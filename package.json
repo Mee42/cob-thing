@@ -1,0 +1,11 @@
+{
+  "name": "node_test",
+  "version": "0.0.1",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^4.0.1"
+  }
+}
