@@ -1,14 +1,12 @@
-console.log("RENDERER")
+
+const remote = require('electron').remote;
+const ipc = require('electron').ipcRenderer;
 
 
-// let ui = {
-//   button : document.getElementById('button')
-// } 
-// var x = function () {
-//     console.log('Called ui#start')
-//     ui.button.onclick = () => {
-//         console.log("CLICKED")
-//     }
-    
-// }
+let ui = {
+    button : document.getElementById('button')
+}
 
+ui.button.onclick = () => {
+    ui.button.textContent = NetworkTables.containsKey('key')
+}

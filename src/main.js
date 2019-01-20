@@ -1,5 +1,9 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+'use strict'
+const electron = require('electron')
+const app = electron.app
+const BrowserWindow = electron.BrowserWindow
+const ipc = electron.ipcMain;
 // var ui = require('./ui')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -16,17 +20,18 @@ function createWindow () {
   // and load the index.html of the app.
   // win.loadFile('index.html')
   win.loadURL(`file://${__dirname}/index.html`);
-
-
-
-  
-  win.once('ready-to-show', () => { win.show(); console.log("win#show called")})//don't show until ready
+ 
+  win.once('ready-to-show', () => { 
+    win.show(); 
+    console.log("win#show called")
+    win.webContents.send('start')
+  })//don't show until ready
+  win.webContents.openDevTools()
   win.on('closed', () => { win = null })
   win.setMenuBarVisibility(false)
   process.on('uncaughtException', function (err) {
     console.log(err);
   })
-  
 }
 
 app.on('ready', createWindow)
@@ -45,4 +50,3 @@ app.on('activate', function () {
     createWindow()
   }
 })
-
