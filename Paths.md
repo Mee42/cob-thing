@@ -20,7 +20,7 @@ cob: {
     },
     robot: {
         is-sandstorm: "/cob/robot/is-standstorm",
-        is-teleop: "/cob/robot/is-standstorm",
+        is-teleop: "/cob/robot/is-teleop",
         is-enabled: "/cob/robot/is-enabled",
     },
     fms: {
