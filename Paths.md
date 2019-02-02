@@ -5,28 +5,28 @@ Add anything new here first, and then cob.h/cpp and renderer.js, before working 
 ```json
 cob: {
     location : {
-        x: "/cob/x"
-        y: "/cob/y"
-        rotation: "/cob/rotation"
-    }
+        x: "/cob/x",
+        y: "/cob/y",
+        rotation: "/cob/rotation",
+    },
     arm: {
         main-arm: {
-            rotation: "/cob/arm/main-arm/rotation"
-        }
+            rotation: "/cob/arm/main-arm/rotation",
+        },
         wrist: {
-            rotation: "/cob/arm/wrist/rotation"
-            vacuum: "/cob/arm/wrist/vacuum"
-        }
-    }
+            rotation: "/cob/arm/wrist/rotation",
+            vacuum: "/cob/arm/wrist/vacuum",
+        },
+    },
     robot: {
-        is-sandstorm: "/cob/robot/is-standstorm"
-        is-teleop: "/cob/robot/is-standstorm"
-        is-enabled: "/cob/robot/is-enabled"
-    }
+        is-sandstorm: "/cob/robot/is-standstorm",
+        is-teleop: "/cob/robot/is-standstorm",
+        is-enabled: "/cob/robot/is-enabled",
+    },
     fms: {
-        time-left: "/cob/fms/time-left"
-        is-red: "/cob/fms/is-red"
-    }
+        time-left: "/cob/fms/time-left",
+        is-red: "/cob/fms/is-red",
+    },
 }
 
 ```
