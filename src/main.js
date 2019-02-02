@@ -4,10 +4,29 @@ const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const ipc = electron.ipcMain;
+
+const wpilib_NT = require('wpilib-nt-client');
+const client = new wpilib_NT.Client();
+
+let connected,
+    ready = false;
 // var ui = require('./ui')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+
+let clientDataListener = (key, val, valType, mesgType, id, flags) => {
+  if (val === 'true' || val === 'false') {
+      val = val === 'true';
+  }
+  win.webContents.send(mesgType, {
+      key,
+      val,
+      valType,
+      id,
+      flags
+  });
+};
 
 function createWindow () {
   // Create the browser window.
@@ -16,6 +35,47 @@ function createWindow () {
     height: 600,
     show: false
   })
+
+  client.start((con, err) => {
+    // If the Window is ready than send the connection status to it
+    if (ready) {
+      win.webContents.send('connected', con);
+    } else connected = () => win.webContents.send('connected', con);
+});
+// When the script starts running in the window set the ready variable
+ipc.on('ready', (ev, mesg) => {
+    console.log('NetworkTables is ready');
+    ready = win != null;
+
+    // Remove old Listener
+    client.removeListener(clientDataListener);
+
+    // Add new listener with immediate callback
+    client.addListener(clientDataListener, true);
+
+    // Send connection message to the window if if the message is ready
+    if (connected) connected();
+});
+// When the user chooses the address of the bot than try to connect
+ipc.on('connect', (ev, address, port) => {
+  let callback = (connected, err) => {
+      try{
+        win.webContents.send('connected', connected); //throws error ere
+      } catch(e){return;}
+  };
+  if (port) {
+      client.start(callback, address, port);
+  } else {
+      client.start(callback, address);
+      console.log("connecting to " + address)
+  }
+});
+ipc.on('add', (ev, mesg) => {
+  client.Assign(mesg.val, mesg.key, (mesg.flags & 1) === 1);
+});
+ipc.on('update', (ev, mesg) => {
+  client.Update(mesg.id, mesg.val);
+});
 
   // and load the index.html of the app.
   // win.loadFile('index.html')

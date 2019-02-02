@@ -6,10 +6,21 @@
 
  </head>
   <body>
-    <div id="rotation"></div>
-    <div id="whatsrunning"></div>
-    <div id="timeleft"></div>
-    
+    <div class="column">
+      <div id="rotation"></div>
+      <div id="whatsrunning"></div>
+      <div id="timeleft"></div>
+    </div>
+    <div class="column-other">
+        <canvas id="arm" width="500px" height="500px"></canvas>
+    </div>
+    <!-- <div>
+        <input type="range" min="0" max="360" value="0" class="slider" id="angleSlider">
+    </div> -->
+    <div id="login">
+        <input id="connect-address" type="text" value="localhost" disabled>
+        <button id="connect" disabled>Connecting</button>
+    </div>
     <script src="./networktables.js"></script>
     <script>
          require('./renderer')
