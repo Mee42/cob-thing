@@ -5,9 +5,9 @@ Add anything new here first, and then cob.h/cpp and renderer.js, before working 
 ```
 cob: {
     location : {
-        x: "/cob/x",
-        y: "/cob/y",
-        rotation: "/cob/rotation",
+        x: "/cob/location/x",
+        y: "/cob/location/y",
+        rotation: "/cob/location/rotation",
     },
     arm: {
         main-arm: {
