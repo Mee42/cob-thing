@@ -2,12 +2,12 @@
 This is the place to keep track of all the different network tables used in the cob. 
 Add anything new here first, and then cob.h/cpp and renderer.js, before working with it
 
-```json
+```
 cob: {
     location : {
-        x: "/cob/x",
-        y: "/cob/y",
-        rotation: "/cob/rotation",
+        x: "/cob/location/x",
+        y: "/cob/location/y",
+        rotation: "/cob/location/rotation",
     },
     arm: {
         main-arm: {
@@ -19,8 +19,8 @@ cob: {
         },
     },
     robot: {
-        is-sandstorm: "/cob/robot/is-standstorm",
-        is-teleop: "/cob/robot/is-standstorm",
+        is-sandstorm: "/cob/robot/is-sandstorm",
+        is-teleop: "/cob/robot/is-teleop",
         is-enabled: "/cob/robot/is-enabled",
     },
     fms: {
