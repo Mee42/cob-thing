@@ -6,7 +6,23 @@
         {
             "type": "npm",
             "script": "start",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Outline Viewer",
+            "type": "shell",
+            "command": "~/bin/outline",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": [
+                "$eslint-compact"
+            ]
         }
     ]
 }

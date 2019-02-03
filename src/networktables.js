@@ -142,14 +142,6 @@ var NetworkTables =
                 }
             },
             /**
-             * Returns the value that the key maps to. If the websocket is not open, this will always return undefined
-             * @param {string} key A networktables key
-             * @returns value of key if present, undefined otherwise
-             */
-            getValue(key){
-                return getValue(key,undefined)
-            },
-            /**
              * @returns null if the robot is not connected, or a string otherwise
              */
             getRobotAddress() {

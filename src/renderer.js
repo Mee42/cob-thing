@@ -1,5 +1,5 @@
 
-const remote = require('electron').remote;
+// const remote = require('electron').remote;
 const ipc = require('electron').ipcRenderer;
 
 let addresses = {
@@ -27,6 +27,22 @@ let addresses = {
         isRed: "/cob/fms/is-red",
     },
 }
+function initAllDatapoints(){
+    NetworkTables.putValue(addresses.location.x,0)
+    NetworkTables.putValue(addresses.location.y,0)
+    NetworkTables.putValue(addresses.location.rotation,0)
+    NetworkTables.putValue(addresses.arm.mainArm.rotation,0)
+    NetworkTables.putValue(addresses.arm.wrist.rotation,0)
+    NetworkTables.putValue(addresses.arm.wrist.vacuum,false)
+    NetworkTables.putValue(addresses.robot.isSandstorm,false)
+    NetworkTables.putValue(addresses.robot.isTeleop,false)
+    NetworkTables.putValue(addresses.robot.isEnabled,false)
+    NetworkTables.putValue(addresses.fms.timeLeft,-1)
+    NetworkTables.putValue(addresses.fms.isRed,false)
+    
+    
+}
+initAllDatapoints()
 
 
 let ui = {
@@ -41,7 +57,8 @@ let ui = {
 	},
 	connecter: {
 		address: document.getElementById('connect-address'),
-		connect: document.getElementById('connect')
+        connect: document.getElementById('connect'),
+        login: document.getElementById('login')
 	}
 };
 
@@ -57,10 +74,13 @@ function onRobotConnection(connected) {
 	// ui.robotState.data = state;
 	if (connected) {
 		// On connect hide the connect popups
-		document.body.classList.toggle('login', true);
+        login.style.width = "0%"
+        fullRender()
 	} else {
-		// On disconnect show the connect popup
-		document.body.classList.toggle('login', false);
+        login.style.width = "100%"
+
+        // login.style.display = "block"
+
 		// Add Enter key handler
 		console.log("called onRObotConnection:" + state)
 		address.onkeydown = ev => {
@@ -70,43 +90,46 @@ function onRobotConnection(connected) {
 		};
 		// Enable the input and the button
 		address.disabled = false;
-		connect.disabled = false;
+		// connect.disabled = false;
 		connect.firstChild.data = 'Connect';
 		// CHANGE THIS VALUE TO YOUR ROBOT'S IP ADDRESS
-		address.value = '10.6.23.2';
+		// address.value = '10.6.23.2';
 		address.focus();
-		address.setSelectionRange(8, 12);
+        // address.setSelectionRange(8, 12);
+        
 		// On click try to connect and disable the input and the button
 		connect.onclick = () => {
-			console.log("connect button clicked")
-			ipc.send('connect', address.value);
-			address.disabled = true;
-			connect.disabled = true;
-			connect.firstChild.data = 'Connecting';
+            console.log("connect button clicked")
+            if(connect.firstChild.data == 'Connect'){
+                ipc.send('connect', address.value);
+                address.disabled = true;
+                // connect.disabled = true;
+                connect.firstChild.data = 'Connecting';
+            }else if(connect.firstChild.data == 'Connecting'){
+                ipc.send('stop-connect');
+                address.disabled = false;
+                connect.disabled = false;
+                connect.firstChild.data = 'Connect'
+            }
 		};
 	}
 }
 
-
-//should be split into different functions, so that the entire thing doesn't have to render when one thing updates
-//also, values that can be changed and don't touch anything else should (ie, robot vacume on/off) should just be handled in the listener
-//more complex stuff (like the arm) should have a dedicated method renderArm() which is called from the listeners
-//For now, this should work fine
-function render(){
-	console.log("Rendering")
-	ui.rotation.textContent = 'Rotation: ' + NetworkTables.getValue(addresses.rotation,'unknown')
-	ui.teleop.textContent = NetworkTables.getValue(addresses.robot.isTeleop,false) ? 'teleop is running' : 
-								NetworkTables.getValue(addresses.robot.isSandstorm,false) ? 'Sandstorm is running' : 'Nothing is running'
-	ui.timeleft.textContent = 'Time left: ' + NetworkTables.getValue(addresses.fms.time,'-1')
+function fullRender(){
+    renderArm()
 
 }
-render()
-//methods such as render(), and later on renderArm() etc, should be called in a function renderAll()
-// which will be called as the last thing in this file, rendering the entire screen.
-// for now, calling it directly after instansiation will work fine
-// without doing this, the screen's objects will not 
 
 function renderArm(){
+    if(!NetworkTables.isRobotConnected()){
+        //if not connected, we can't render this
+        return
+    }
+    if(ui.arm.canvas == null ){
+        //for some reason this happens when it's covered
+        console.log("unable to render arm due to context undefined")
+        return
+    }
 	let main = NetworkTables.getValue('' + addresses.arm.mainArm.rotation)
 	main = (main - 90) % 360
 	// let wrist = NetworkTables.getValue(addresses.arm.wrist.rotation)
@@ -131,7 +154,8 @@ function renderArm(){
 renderArm()
 
 NetworkTables.addKeyListener('' + addresses.arm.mainArm.rotation,()=>{
-	renderArm()
+    renderArm()
+    
 },false);
 NetworkTables.addKeyListener('' + addresses.arm.wrist.wrist,()=>{
 	renderArm()
@@ -151,7 +175,6 @@ function onValueChanged(key,value,isNew){
 		value = false;
 	}
 }
-
 
 
 

@@ -8,6 +8,8 @@ const ipc = electron.ipcMain;
 const wpilib_NT = require('wpilib-nt-client');
 const client = new wpilib_NT.Client();
 
+const DEBUG = true
+
 let connected,
     ready = false;
 // var ui = require('./ui')
@@ -30,10 +32,18 @@ let clientDataListener = (key, val, valType, mesgType, id, flags) => {
 
 function createWindow () {
   // Create the browser window.
+  let width = 1000
+
+  if(DEBUG){
+    width = 2000
+  }
   win = new BrowserWindow({
-    width: 1000, 
+    width: width, 
     height: 600,
-    show: false
+    show: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
   })
 
   client.start((con, err) => {
@@ -58,6 +68,7 @@ ipc.on('ready', (ev, mesg) => {
 });
 // When the user chooses the address of the bot than try to connect
 ipc.on('connect', (ev, address, port) => {
+
   let callback = (connected, err) => {
       try{
         win.webContents.send('connected', connected); //throws error ere
@@ -70,6 +81,9 @@ ipc.on('connect', (ev, address, port) => {
       console.log("connecting to " + address)
   }
 });
+ipc.on('stop-connect', () => {
+  client.stop()
+})
 ipc.on('add', (ev, mesg) => {
   client.Assign(mesg.val, mesg.key, (mesg.flags & 1) === 1);
 });
@@ -83,15 +97,17 @@ ipc.on('update', (ev, mesg) => {
  
   win.once('ready-to-show', () => { 
     win.show(); 
-    console.log("win#show called")
     win.webContents.send('start')
   })//don't show until ready
-  win.webContents.openDevTools()
   win.on('closed', () => { win = null })
   win.setMenuBarVisibility(false)
   process.on('uncaughtException', function (err) {
     console.log(err);
   })
+
+  if(DEBUG){
+    win.webContents.openDevTools()
+  }
 }
 
 app.on('ready', createWindow)
