@@ -51,10 +51,13 @@ let ui = {
 	timeleft: document.getElementById('timeleft'),
 	arm : {
 		canvas : document.getElementById('arm'), //the arm canvass
-	},
-	test: {
-		slider :document.getElementById('angleSlider')
-	},
+    },
+    timer: {
+        canvas : document.getElementById('timer')
+    },
+	dev: {
+        timer : document.getElementById('dev-timer')
+    },
 	connecter: {
 		address: document.getElementById('connect-address'),
         connect: document.getElementById('connect'),
@@ -117,7 +120,49 @@ function onRobotConnection(connected) {
 
 function fullRender(){
     renderArm()
+    renderTimer()
+}
 
+
+function renderTimer(){
+
+    if(!NetworkTables.isRobotConnected()){
+        //if not connected, we can't render this - just to be safe
+        return
+    }
+    if(ui.timer.canvas == null){
+        console.log("unable to render timer due to contnt undefined")
+        return
+    }
+    console.log("called renderTimer()")
+    let time = NetworkTables.getValue('' + addresses.fms.timeLeft)
+    let isRed = NetworkTables.getValue('' + addresses.fms.isRed)
+    if(isRed == 'true'){
+        isRed = true;
+    }
+    let ct = ui.timer.canvas.getContext("2d")
+    let xMax = 250
+    let yMax = 250
+    ct.fillStyle = 'rgba(0,0,0,0)'//transparency
+    ct.fillRect(0, 0, xMax, yMax);
+    ct.fillStyle = (isRed)? 'red' : 'blue'
+    ct.beginPath();
+    ct.arc(xMax/2,yMax/2, 50, 0, 2 * Math.PI);
+    ct.fill(); 
+    let amountToFill = time / 180.0//3 minutes
+    let archToFill = amountToFill * (2 * Math.PI)//amountToFill should be 0 <= x <= 1 so this should fall under 0 <= x <= (2*PI)
+    ct.fillStyle = (isRed) ? 'DarkRed' : 'DarkBlue'
+    ct.beginPath();
+    ct.moveTo(xMax/2,yMax/2)
+    ct.arc(xMax/2,yMax/2, 50, 0, archToFill);
+    ct.moveTo(xMax/2,yMax/2)
+    ct.fill(); 
+
+    //do the text
+    ct.font = "30px Monospace";
+    ct.fillStyle = 'white'
+    ct.textAlign = "center"; 
+    ct.fillText("3:23", xMax/2, yMax/2+10);//30px text, 15px ajustment?
 }
 
 function renderArm(){
@@ -140,7 +185,8 @@ function renderArm(){
 	let wristLength = 30
 
 	let ct = ui.arm.canvas.getContext("2d");
-	ct.fillStyle = "silver";
+	// ct.fillStyle = "#bbb";
+    ct.fillStyle = 'rgba(0,0,0,0)'//transparent
 
 	ct.fillRect(0, 0, ui.arm.canvas.width, ui.arm.canvas.height);
 	ct.beginPath()
@@ -149,18 +195,28 @@ function renderArm(){
 	let newX = Math.cos(main * (Math.PI / 180))*armLength + xMax/2
 	let newY = Math.sin(main * (Math.PI / 180))*armLength + yMax/2
 	ct.lineTo(newX,newY)
-	ct.stroke()
+    ct.stroke()
+    
 }
-renderArm()
 
 NetworkTables.addKeyListener('' + addresses.arm.mainArm.rotation,()=>{
     renderArm()
-    
 },false);
 NetworkTables.addKeyListener('' + addresses.arm.wrist.wrist,()=>{
 	renderArm()
 },false);
+NetworkTables.addKeyListener('' + addresses.fms.timeLeft,()=>{
+    renderTimer();
+})
+NetworkTables.addKeyListener('' + addresses.fms.isRed,()=>{
+    renderTimer();
+})
 
+
+//dev input
+ui.dev.timer.oninput = function() {
+    NetworkTables.putValue('' + addresses.fms.timeLeft,this.value)
+};
 
 
 
@@ -177,4 +233,4 @@ function onValueChanged(key,value,isNew){
 }
 
 
-
+fullRender()
