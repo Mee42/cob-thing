@@ -8,29 +8,15 @@
 </head>
 
 <body>
-  <div class="row">
-    <div class="column" style="background-color:#aaa">
-      <div id="rotation">*Rotation*</div>
-      <div id="whatsrunning">*what's running*</div>
-      <div id="timeleft">*time left*</div>
-    </div>
-    <div class="column" style="background-color:#bbb">
       <canvas id="arm" width="500px" height="500px"></canvas>
-    </div>
-    <div class="column" style="background-color: #ccc">
-      <canvas id="timer" width="250px" height="250px"></canvas>
-    </div>
-    <div id="dev" class="column" style="background-color: #ddd">
-      <!-- dev-->
-      <input type="range" min="0" max="180" value="50" class="slider" id="dev-timer">
+      <canvas id="timer" width="500px" height="500px"></canvas>
+      <canvas id="view" width="980px" height="480px"></canvas>
+      <br />
+      <input type="range" min="0" max="180" value="50" class="slider" id="dev-timer"><br />
+      <input type="range" min="0" max="180" value="50" class="slider" id="dev-arm"><br />
+      <input type="range" min="0" max="180" value="50" class="slider" id="dev-wrist"><br />
+      
 
-    </div>
-  </div>
-
-  <!-- <div>
-        <input type="range"
-         min="0" max="360" value="0" class="slider" id="angleSlider">
-    </div> -->
 
   <div id="login" class="overlay">
     <!-- Overlay content -->

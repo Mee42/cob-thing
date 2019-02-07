@@ -37,7 +37,7 @@ function initAllDatapoints(){
     NetworkTables.putValue(addresses.robot.isSandstorm,false)
     NetworkTables.putValue(addresses.robot.isTeleop,false)
     NetworkTables.putValue(addresses.robot.isEnabled,false)
-    NetworkTables.putValue(addresses.fms.timeLeft,-1)
+    NetworkTables.putValue(addresses.fms.timeLeft,180)
     NetworkTables.putValue(addresses.fms.isRed,false)
     
     
@@ -55,8 +55,13 @@ let ui = {
     timer: {
         canvas : document.getElementById('timer')
     },
+    view: {
+        canvas :document.getElementById('view')  
+    },
 	dev: {
-        timer : document.getElementById('dev-timer')
+        timer : document.getElementById('dev-timer'),
+        arm : document.getElementById('dev-arm'),
+        wrist : document.getElementById('dev-wrist')
     },
 	connecter: {
 		address: document.getElementById('connect-address'),
@@ -66,7 +71,7 @@ let ui = {
 };
 
 
-NetworkTables.addRobotConnectionListener(onRobotConnection, true);
+NetworkTables.addRobotConnectionListener(onRobotConnection, false);
 
 
 function onRobotConnection(connected) {
@@ -121,8 +126,24 @@ function onRobotConnection(connected) {
 function fullRender(){
     renderArm()
     renderTimer()
+    renderView()
 }
 
+function renderView(){
+
+    if(!NetworkTables.isRobotConnected()){
+        //if not connected, we can't render this - just to be safe
+        return
+    }
+    if(ui.view.canvas == null){
+        console.log("unable to render timer due to contnt undefined")
+        return
+    }
+    let ct = ui.timer.canvas.getContext("2d")
+    let xMax = 980
+    let yMax = 480
+    
+}
 
 function renderTimer(){
 
@@ -162,7 +183,9 @@ function renderTimer(){
     ct.font = "30px Monospace";
     ct.fillStyle = 'white'
     ct.textAlign = "center"; 
-    ct.fillText("3:23", xMax/2, yMax/2+10);//30px text, 15px ajustment?
+    
+    let text = '' + Math.floor(time/60) + ':' + Math.floor(time%60)
+    ct.fillText(text, xMax/2, yMax/2+10);//30px text, 15px ajustment?
 }
 
 function renderArm(){
@@ -175,26 +198,39 @@ function renderArm(){
         console.log("unable to render arm due to context undefined")
         return
     }
-	let main = NetworkTables.getValue('' + addresses.arm.mainArm.rotation)
-	main = (main - 90) % 360
+	let mainArmRotation = NetworkTables.getValue('' + addresses.arm.mainArm.rotation)
+    mainArmRotation = (mainArmRotation - 90) % 360
+    let wristArmRotation = NetworkTables.getValue('' + addresses.arm.wrist.rotation)
+    wristArmRotation = (wristArmRotation + 0/*ajustment value*/) % 360//keep it below 360
 	// let wrist = NetworkTables.getValue(addresses.arm.wrist.rotation)
 	//consts
-	let xMax = 500
-	let yMax = 500
+	let xMax = ui.arm.canvas.width
+    let yMax = ui.arm.canvas.height
+    let xMid = 20 
+    let yMid = yMax/2
+
+
 	let armLength = 200
 	let wristLength = 30
 
 	let ct = ui.arm.canvas.getContext("2d");
-	// ct.fillStyle = "#bbb";
-    ct.fillStyle = 'rgba(0,0,0,0)'//transparent
+    // ct.fillStyle = "#bbb";
+    // ct.fillStyle = 'black'//transparent
+    ct.fillRect(0, 0, ui.arm.canvas.width, ui.arm.canvas.height);
+    
+    ct.fillStyle = '#bbb'
 
 	ct.fillRect(0, 0, ui.arm.canvas.width, ui.arm.canvas.height);
 	ct.beginPath()
-	ct.moveTo(xMax/2,yMax)
-	ct.lineTo(xMax/2,yMax/2);//the middle of the default size
-	let newX = Math.cos(main * (Math.PI / 180))*armLength + xMax/2
-	let newY = Math.sin(main * (Math.PI / 180))*armLength + yMax/2
-	ct.lineTo(newX,newY)
+	ct.moveTo(xMid,yMax)
+	ct.lineTo(xMid,yMid);//the middle of the default size
+	let newX = Math.cos(mainArmRotation * (Math.PI / 180))*armLength + xMid
+	let newY = Math.sin(mainArmRotation * (Math.PI / 180))*armLength + yMid
+    ct.lineTo(newX,newY)
+    let wristX = Math.cos(wristArmRotation * (Math.PI / 180))*wristLength + newX
+    let wristY = Math.sin(wristArmRotation * (Math.PI / 180))*wristLength + newY
+    ct.lineTo(wristX,wristY)
+    //draw to 
     ct.stroke()
     
 }
@@ -205,18 +241,28 @@ NetworkTables.addKeyListener('' + addresses.arm.mainArm.rotation,()=>{
 NetworkTables.addKeyListener('' + addresses.arm.wrist.wrist,()=>{
 	renderArm()
 },false);
+NetworkTables.addKeyListener('' + addresses.arm.wrist.rotation,()=>{
+    renderArm()
+},false)
 NetworkTables.addKeyListener('' + addresses.fms.timeLeft,()=>{
     renderTimer();
-})
+},false)
 NetworkTables.addKeyListener('' + addresses.fms.isRed,()=>{
     renderTimer();
-})
+},false)
 
 
 //dev input
 ui.dev.timer.oninput = function() {
     NetworkTables.putValue('' + addresses.fms.timeLeft,this.value)
 };
+ui.dev.arm.oninput = function() {
+    NetworkTables.putValue('' + addresses.arm.mainArm.rotation,this.value)
+};
+ui.dev.wrist.oninput = function() {
+    NetworkTables.putValue('' + addresses.arm.wrist.rotation,this.value)
+};
+
 
 
 
