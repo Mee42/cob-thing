@@ -8,6 +8,8 @@ cob: {
         x: "/cob/location/x",
         y: "/cob/location/y",
         rotation: "/cob/location/rotation",
+        xVel: "/cob/location/xVel",
+        yVel: "/cob/location/yVel"
     },
     arm: {
         main-arm: {
