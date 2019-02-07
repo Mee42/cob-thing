@@ -1,4 +1,4 @@
-#Paths for cob network tables
+# Paths for cob network tables
 This is the place to keep track of all the different network tables used in the cob. 
 Add anything new here first, and then cob.h/cpp and renderer.js, before working with it
 
@@ -8,6 +8,8 @@ cob: {
         x: "/cob/location/x",
         y: "/cob/location/y",
         rotation: "/cob/location/rotation",
+        xVel: "/cob/location/xVel",
+        yVel: "/cob/location/yVel"
     },
     arm: {
         main-arm: {
