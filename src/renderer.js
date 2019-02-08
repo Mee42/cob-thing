@@ -26,6 +26,13 @@ let addresses = {
         timeLeft: "/cob/fms/time-left",
         isRed: "/cob/fms/is-red",
     },
+    vision: {
+        centerX: "/vision/centerX",
+        centerY: "/vision/centerY",
+        height: "/vision/height",
+        angle: "/vision/angle",
+        width: "/vision/width"        
+    }
 }
 function initAllDatapoints(){
     NetworkTables.putValue(addresses.location.x,0)
@@ -39,6 +46,12 @@ function initAllDatapoints(){
     NetworkTables.putValue(addresses.robot.isEnabled,false)
     NetworkTables.putValue(addresses.fms.timeLeft,180)
     NetworkTables.putValue(addresses.fms.isRed,false)
+    
+    NetworkTables.putValue(addresses.vision.centerX,[])
+    NetworkTables.putValue(addresses.vision.centerY,[])
+    NetworkTables.putValue(addresses.vision.height,[])
+    NetworkTables.putValue(addresses.vision.angle,[])
+    NetworkTables.putValue(addresses.vision.width,[])
     
     
 }
@@ -136,13 +149,61 @@ function renderView(){
         return
     }
     if(ui.view.canvas == null){
-        console.log("unable to render timer due to contnt undefined")
+        console.log("unable to render view due to contnt undefined")
         return
     }
-    let ct = ui.timer.canvas.getContext("2d")
+    // console.log("render view")
+    let ct = ui.view.canvas.getContext("2d")
     let xMax = 980
-    let yMax = 480
+    let yMax = 540
+    let centerX = NetworkTables.getValue('' + addresses.vision.centerX)
     
+    let centerY = NetworkTables.getValue('' + addresses.vision.centerY)
+
+    let heightA = NetworkTables.getValue('' + addresses.vision.height)
+    let widthA = NetworkTables.getValue('' + addresses.vision.width)
+    let angleA = NetworkTables.getValue('' + addresses.vision.angle)
+
+    ct.fillStyle = 'black'
+    ct.fillRect(0,0,xMax,yMax)
+    
+
+    ct.fillStyle = 'green'
+    let i = -1
+    while(centerX[++i] != undefined){
+        let x = centerX[i]
+        let y = centerY[i]
+        let height = heightA[i]
+        let h = height/2//THis is for calculations, makes stuff easier
+        let width = widthA[i]
+        let w = width/2//see above
+        let angle = angleA[i]
+        if(height < width){
+            let a = height//assume hight is always bigger
+            height = width
+            width = a 
+        }
+        let rotation = function(x,y,sin,cos,addX,addY){
+            let obj = {}
+            obj.x = (x*cos - y*sin) + addX
+            obj.y = (x*sin + y*cos) + addY
+            return obj
+        }
+        let sin = Math.sin(angle * (Math.PI/180))
+        let cos = Math.cos(angle * (Math.PI/180))
+        
+        let a = rotation(-w,-h,sin,cos,x,y)
+        let b = rotation(+w,-h,sin,cos,x,y)
+        let c = rotation(+w,+h,sin,cos,x,y)
+        let d = rotation(-w,+h,sin,cos,x,y)
+        ct.beginPath()
+        ct.moveTo(a.x,a.y)
+        ct.lineTo(b.x,b.y)
+        ct.lineTo(c.x,c.y)
+        ct.lineTo(d.x,d.y)
+        ct.lineTo(a.x,a.y)
+        ct.fill()
+    }
 }
 
 function renderTimer(){
@@ -250,6 +311,27 @@ NetworkTables.addKeyListener('' + addresses.fms.timeLeft,()=>{
 NetworkTables.addKeyListener('' + addresses.fms.isRed,()=>{
     renderTimer();
 },false)
+
+NetworkTables.addKeyListener('' + addresses.vision.centerX,()=>{
+    renderView();
+},false)
+
+NetworkTables.addKeyListener('' + addresses.vision.centerY,()=>{
+    renderView();
+},false)
+
+NetworkTables.addKeyListener('' + addresses.vision.height,()=>{
+    renderView();
+},false)
+
+NetworkTables.addKeyListener('' + addresses.vision.angle,()=>{
+    renderView();
+},false)
+
+NetworkTables.addKeyListener('' + addresses.vision.width,()=>{
+    renderView();
+},false)
+
 
 
 //dev input
