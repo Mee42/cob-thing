@@ -15,7 +15,7 @@ let connected,
 // var ui = require('./ui')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+var win
 
 let clientDataListener = (key, val, valType, mesgType, id, flags) => {
   if (val === 'true' || val === 'false') {
@@ -30,11 +30,6 @@ let clientDataListener = (key, val, valType, mesgType, id, flags) => {
   });
 };
 
-function position(){
-  win.setPosition(0,0)
-
-  console.log('moved to topRight')
-}
 
 function createWindow () {
   // Create the browser window.
@@ -47,8 +42,7 @@ function createWindow () {
       nodeIntegration: true
     }
   })
-  win.on('ready-to-show',()=>{position()})
-
+  win.setPosition(0,0)
   client.start((con, err) => {
     // If the Window is ready than send the connection status to it
     if (ready) {
@@ -87,7 +81,6 @@ ipc.on('connect', (ev, address, port) => {
 ipc.on('stop-connect', () => {
   client.stop()
 })
-ipc.on('position',()=>{position();})
 ipc.on('add', (ev, mesg) => {
   client.Assign(mesg.val, mesg.key, (mesg.flags & 1) === 1);
 });
