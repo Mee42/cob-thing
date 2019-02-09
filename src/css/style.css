@@ -1,17 +1,3 @@
-/* Create three equal columns that floats next to each other */
-.column {
-  float: left;
-  padding: 10px;
-  height: 600px;
-}
-
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
 
 
   /* Data from https://www.w3schools.com/howto/howto_js_fullscreen_overlay.asp */

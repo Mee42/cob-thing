@@ -71,6 +71,9 @@ let ui = {
     view: {
         canvas :document.getElementById('view')  
     },
+    robot: {
+        canvas : document.getElementById('robot')
+    },
 	dev: {
         timer : document.getElementById('dev-timer'),
         arm : document.getElementById('dev-arm'),
@@ -140,6 +143,51 @@ function fullRender(){
     renderArm()
     renderTimer()
     renderView()
+    renderRobot()
+}
+
+function renderRobot(){
+
+    if(!NetworkTables.isRobotConnected()){
+        //if not connected, we can't render this - just to be safe
+        return
+    }
+    if(ui.robot.canvas == null){
+        console.log("unable to render robot due to contnt undefined")
+        return
+    }
+    let ct = ui.robot.canvas.getContext("2d")
+    let xMax = ui.robot.canvas.width
+    let yMax = ui.robot.canvas.height
+    let angle = NetworkTables.getValue('' + addresses.location.rotation)
+    angle = Math.abs(angle) % 360
+    ct.fillStyle = 'blue'
+    ct.fillRect(0,0,xMax,yMax)
+    let x = xMax/2
+    let y = yMax/2
+    let r = 100
+    ct.fillStyle = 'silver'
+    let rotation = function(x,y,sin,cos,addX,addY){
+        let obj = {}
+        obj.x = (x*cos - y*sin) + addX
+        obj.y = (x*sin + y*cos) + addY
+        return obj
+    }
+    let sin = Math.sin(angle * (Math.PI/180))
+    let cos = Math.cos(angle * (Math.PI/180))
+
+    let a = rotation(r,r,sin,cos,x,y)
+    let b = rotation(r,-r,sin,cos,x,y)
+    let c = rotation(-r,-r,sin,cos,x,y)
+    let d = rotation(-r,r,sin,cos,x,y)
+    ct.beginPath()
+    ct.moveTo(a.x,a.y)
+    ct.lineTo(b.x,b.y)
+    ct.lineTo(c.x,c.y)
+    ct.lineTo(d.x,d.y)
+    ct.lineTo(a.x,a.y)
+    ct.fill()
+    // console.log(a.x + "," + a.y + ":" + b.x + "," + b.y + ":" +c.x + "," + c.y + ":" + d.x + "," + d.y + ":")
 }
 
 function renderView(){
@@ -296,30 +344,29 @@ function renderTimer(){
         isRed = true;
     }
     let ct = ui.timer.canvas.getContext("2d")
-    let xMax = 250
-    let yMax = 250
+    let max = ui.timer.canvas.width
     ct.fillStyle = 'rgba(0,0,0,0)'//transparency
-    ct.fillRect(0, 0, xMax, yMax);
+    ct.fillRect(0, 0, max, max);
     ct.fillStyle = (isRed)? 'red' : 'blue'
     ct.beginPath();
-    ct.arc(xMax/2,yMax/2, 50, 0, 2 * Math.PI);
+    ct.arc(max/2,max/2, max/2, 0, 2 * Math.PI);
     ct.fill(); 
     let amountToFill = time / 180.0//3 minutes
     let archToFill = amountToFill * (2 * Math.PI)//amountToFill should be 0 <= x <= 1 so this should fall under 0 <= x <= (2*PI)
     ct.fillStyle = (isRed) ? 'DarkRed' : 'DarkBlue'
     ct.beginPath();
-    ct.moveTo(xMax/2,yMax/2)
-    ct.arc(xMax/2,yMax/2, 50, 0, archToFill);
-    ct.moveTo(xMax/2,yMax/2)
+    ct.moveTo(max/2,max/2)
+    ct.arc(max/2,max/2, max/2, 0, archToFill);
+    ct.moveTo(max/2,max/2)
     ct.fill(); 
 
     //do the text
-    ct.font = "30px Monospace";
+    ct.font = "75px Monospace";
     ct.fillStyle = 'white'
     ct.textAlign = "center"; 
     
     let text = '' + Math.floor(time/60) + ':' + Math.floor(time%60)
-    ct.fillText(text, xMax/2, yMax/2+10);//30px text, 15px ajustment?
+    ct.fillText(text, max/2, max/2+20);//30px text, 15px ajustment?
 }
 
 function renderArm(){
@@ -338,7 +385,6 @@ function renderArm(){
     wristArmRotation = (wristArmRotation + 0/*ajustment value*/) % 360//keep it below 360
 	// let wrist = NetworkTables.getValue(addresses.arm.wrist.rotation)
 	//consts
-	let xMax = ui.arm.canvas.width
     let yMax = ui.arm.canvas.height
     let xMid = 20 
     let yMid = yMax/2
@@ -404,6 +450,10 @@ NetworkTables.addKeyListener('' + addresses.vision.angle,()=>{
 NetworkTables.addKeyListener('' + addresses.vision.width,()=>{
     renderView();
 },false)
+
+NetworkTables.addKeyListener('' + addresses.location.rotation,()=>{
+    renderRobot();
+})
 
 
 
