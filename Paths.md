@@ -9,7 +9,9 @@ cob: {
         y: "/cob/location/y",
         rotation: "/cob/location/rotation",
         xVel: "/cob/location/xVel",
-        yVel: "/cob/location/yVel"
+        yVel: "/cob/location/yVel",
+        left-distance: "/cob/location/left-distance",
+        right-distance: "/cob/location/right-distance",
     },
     arm: {
         main-arm: {
@@ -24,6 +26,7 @@ cob: {
         is-sandstorm: "/cob/robot/is-sandstorm",
         is-teleop: "/cob/robot/is-teleop",
         is-enabled: "/cob/robot/is-enabled",
+        is-field-oriented: "/cob/robot/is-field-oriented",
     },
     fms: {
         time-left: "/cob/fms/time-left",
