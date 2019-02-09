@@ -163,14 +163,14 @@ function renderView(){
     let heightA = NetworkTables.getValue('' + addresses.vision.height)
     let widthA = NetworkTables.getValue('' + addresses.vision.width)
     let angleA = NetworkTables.getValue('' + addresses.vision.angle)
-
+    let scaleFactor = undefined
     ct.fillStyle = 'black'
     ct.fillRect(0,0,xMax,yMax)
     
 
     ct.fillStyle = 'green'
     let i = -1
-    while(centerX[++i] != undefined){
+    while(centerX != undefined && centerX[++i] != undefined){
         let x = centerX[i]
         let y = centerY[i]
         let height = heightA[i]
@@ -203,7 +203,80 @@ function renderView(){
         ct.lineTo(d.x,d.y)
         ct.lineTo(a.x,a.y)
         ct.fill()
+        // console.log("a:(" + a.x +"," + a.y + ")" +
+        // "b:(" + b.x +"," + b.y + ")" +
+        // "c:(" + c.x +"," + c.y + ")" +
+        // "d:(" + d.x +"," + d.y + ")")
+        //to set the scale value
+        let newScale = height/171
+        if(scaleFactor == undefined || newScale > scaleFactor){
+            scaleFactor = newScale
+        }
+        
     }
+    /*
+
+    a:(427.2,261)
+    b:(453.1,88.3)
+    c:(515.4,97.7)
+    d:(489.5,270.4)
+
+    a:(772.8,77.8)
+    b:(831.7,58)
+    c:(887.2,223.4)
+    d:(828.4,243.2)
+
+    */
+    let a1 = {x:427.2,y:261}
+    let b1 = {x:453.1,y:88.3}
+    let c1 = {x:515.4,y:97.7}
+    let d1 = {x:489.5,y:270.4}
+
+    let a2 = {x:772.8,y:77.8}
+    let b2 = {x:831.7,y:58}
+    let c2 = {x:887.2,y:223.4}
+    let d2 = {x:828.4,y:243.2}
+    
+    let c = {x:d1.x,y:d1.y}
+
+    let arr = [a1,b1,c1,d1,a2,b2,c2,d2]
+    // console.log(arr)
+    // for(ar in arr){
+    //for some reason the line of code above doesn't work
+    for (let i = 0; i < arr.length; i++) {
+        arr[i].x = arr[i].x - c.x
+        arr[i].y = arr[i].y - c.y
+    }//align origins to a local origin
+    // console.log(arr)
+
+    for (let i = 0; i < arr.length; i++) {
+
+        arr[i].x = arr[i].x * scaleFactor
+        arr[i].y = arr[i].y * scaleFactor
+    }
+    // console.log(arr)
+
+    for (let i = 0; i < arr.length; i++) {
+        arr[i].x = arr[i].x + c.x
+        arr[i].y = arr[i].y + c.y
+    }//alight origins back to the real ones
+    // console.log(arr)
+
+    ct.strokeStyle = 'yellow'
+    ct.beginPath()
+    ct.moveTo(a1.x,a1.y)
+    ct.lineTo(b1.x,b1.y)
+    ct.lineTo(c1.x,c1.y)
+    ct.lineTo(d1.x,d1.y)
+    ct.lineTo(a1.x,a1.y)
+    
+    ct.moveTo(a2.x,a2.y)
+    ct.lineTo(b2.x,b2.y)
+    ct.lineTo(c2.x,c2.y)
+    ct.lineTo(d2.x,d2.y)
+    ct.lineTo(a2.x,a2.y)
+
+    ct.stroke()
 }
 
 function renderTimer(){
@@ -216,7 +289,7 @@ function renderTimer(){
         console.log("unable to render timer due to contnt undefined")
         return
     }
-    console.log("called renderTimer()")
+    // console.log("called renderTimer()")
     let time = NetworkTables.getValue('' + addresses.fms.timeLeft)
     let isRed = NetworkTables.getValue('' + addresses.fms.isRed)
     if(isRed == 'true'){
