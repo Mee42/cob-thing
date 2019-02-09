@@ -30,6 +30,12 @@ let clientDataListener = (key, val, valType, mesgType, id, flags) => {
   });
 };
 
+function position(){
+  win.setPosition(0,0)
+
+  console.log('moved to topRight')
+}
+
 function createWindow () {
   // Create the browser window.
   
@@ -41,6 +47,7 @@ function createWindow () {
       nodeIntegration: true
     }
   })
+  win.on('ready-to-show',()=>{position()})
 
   client.start((con, err) => {
     // If the Window is ready than send the connection status to it
@@ -80,6 +87,7 @@ ipc.on('connect', (ev, address, port) => {
 ipc.on('stop-connect', () => {
   client.stop()
 })
+ipc.on('position',()=>{position();})
 ipc.on('add', (ev, mesg) => {
   client.Assign(mesg.val, mesg.key, (mesg.flags & 1) === 1);
 });
@@ -122,3 +130,4 @@ app.on('activate', function () {
     createWindow()
   }
 })
+

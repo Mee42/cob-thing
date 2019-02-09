@@ -140,6 +140,7 @@ function fullRender(){
     renderArm()
     renderTimer()
     renderView()
+    ipc.send('position')
 }
 
 function renderView(){
