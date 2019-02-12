@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "electron-positioner": "^4.1.0",
+    "memoizee": "^0.4.14",
     "wpilib-nt-client": "^1.7.1"
   }
 }

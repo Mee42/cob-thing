@@ -1,6 +1,8 @@
 
 // const remote = require('electron').remote;
 const ipc = require('electron').ipcRenderer;
+var memoize = require("memoizee");
+
 
 let addresses = {
     location : {
@@ -34,6 +36,7 @@ let addresses = {
         width: "/vision/width"        
     }
 }
+
 function initAllDatapoints(){
     NetworkTables.putValue(addresses.location.x,0)
     NetworkTables.putValue(addresses.location.y,0)
@@ -52,10 +55,7 @@ function initAllDatapoints(){
     NetworkTables.putValue(addresses.vision.height,[])
     NetworkTables.putValue(addresses.vision.angle,[])
     NetworkTables.putValue(addresses.vision.width,[])
-    
-    
 }
-initAllDatapoints()
 
 
 let ui = {
@@ -74,6 +74,9 @@ let ui = {
     robot: {
         canvas : document.getElementById('robot')
     },
+    wrist: {
+        canvas : document.getElementById('wrist')
+    },
 	dev: {
         timer : document.getElementById('dev-timer'),
         arm : document.getElementById('dev-arm'),
@@ -87,6 +90,8 @@ let ui = {
 };
 
 
+
+
 NetworkTables.addRobotConnectionListener(onRobotConnection, false);
 
 
@@ -97,6 +102,8 @@ function onRobotConnection(connected) {
 	console.log(state);
 	// ui.robotState.data = state;
 	if (connected) {
+        initAllDatapoints()
+
 		// On connect hide the connect popups
         login.style.width = "0%"
         fullRender()
@@ -144,6 +151,24 @@ function fullRender(){
     renderTimer()
     renderView()
     renderRobot()
+    renderWrist()
+}
+
+function renderWrist(){
+
+    if(!NetworkTables.isRobotConnected()){
+        //if not connected, we can't render this - just to be safe
+        return
+    }
+    if(ui.wrist.canvas == null){
+        console.log("unable to render robot due to contnt undefined")
+        return
+    }
+    let ct = ui.wrist.canvas.getContext("2d")
+    let xMax = ui.wrist.canvas.width
+    let yMax = ui.wrist.canvas.height
+    let max = (xMax == yMax) ? xMax : undefined
+    ct.fillRect(0,0,xMax,yMax)
 }
 
 function renderRobot(){
@@ -161,33 +186,35 @@ function renderRobot(){
     let yMax = ui.robot.canvas.height
     let angle = NetworkTables.getValue('' + addresses.location.rotation)
     angle = Math.abs(angle) % 360
-    ct.fillStyle = 'blue'
-    ct.fillRect(0,0,xMax,yMax)
+    ct.fillStyle = 'white'
+
+    ct.beginPath();
+    ct.arc(xMax/2,xMax/2, xMax/2, 0, 2 * Math.PI);
+    ct.fill(); 
+
     let x = xMax/2
     let y = yMax/2
-    let r = 100
+    let r = 90
     ct.fillStyle = 'silver'
-    let rotation = function(x,y,sin,cos,addX,addY){
-        let obj = {}
-        obj.x = (x*cos - y*sin) + addX
-        obj.y = (x*sin + y*cos) + addY
-        return obj
-    }
-    let sin = Math.sin(angle * (Math.PI/180))
-    let cos = Math.cos(angle * (Math.PI/180))
+    let ver = rectange()
+    ver.a = {x:r,y:r}
+    ver.b = {x:r,y:-r}
+    ver.c = {x:-r,y:-r}
+    ver.d = {x:-r,y:r}
+    renderRotatedRectangle(ct,ver,angle,x,y)
 
-    let a = rotation(r,r,sin,cos,x,y)
-    let b = rotation(r,-r,sin,cos,x,y)
-    let c = rotation(-r,-r,sin,cos,x,y)
-    let d = rotation(-r,r,sin,cos,x,y)
-    ct.beginPath()
-    ct.moveTo(a.x,a.y)
-    ct.lineTo(b.x,b.y)
-    ct.lineTo(c.x,c.y)
-    ct.lineTo(d.x,d.y)
-    ct.lineTo(a.x,a.y)
-    ct.fill()
+    ct.fillStyle = 'black'
+    let w = 10
+    let h1 = r+10
+    let h2 = 10
+    ver = rectange()
+    ver.a = {x:+w,y:h2}
+    ver.b = {x:-w,y:h2}
+    ver.c = {x:-w,y:h1}
+    ver.d = {x:+w,y:h1}
+    renderRotatedRectangle(ct,ver,angle,x,y)
     // console.log(a.x + "," + a.y + ":" + b.x + "," + b.y + ":" +c.x + "," + c.y + ":" + d.x + "," + d.y + ":")
+    // renderArm()
 }
 
 function renderView(){
@@ -231,26 +258,13 @@ function renderView(){
             height = width
             width = a 
         }
-        let rotation = function(x,y,sin,cos,addX,addY){
-            let obj = {}
-            obj.x = (x*cos - y*sin) + addX
-            obj.y = (x*sin + y*cos) + addY
-            return obj
-        }
-        let sin = Math.sin(angle * (Math.PI/180))
-        let cos = Math.cos(angle * (Math.PI/180))
+        let ver = rectange()
+        ver.a = {x:+w,y:+h}
+        ver.b = {x:+w,y:-h}
+        ver.c = {x:-w,y:-h}
+        ver.d = {x:-w,y:+h}
         
-        let a = rotation(-w,-h,sin,cos,x,y)
-        let b = rotation(+w,-h,sin,cos,x,y)
-        let c = rotation(+w,+h,sin,cos,x,y)
-        let d = rotation(-w,+h,sin,cos,x,y)
-        ct.beginPath()
-        ct.moveTo(a.x,a.y)
-        ct.lineTo(b.x,b.y)
-        ct.lineTo(c.x,c.y)
-        ct.lineTo(d.x,d.y)
-        ct.lineTo(a.x,a.y)
-        ct.fill()
+        renderRotatedRectangle(ct,ver,angle,x,y)
         // console.log("a:(" + a.x +"," + a.y + ")" +
         // "b:(" + b.x +"," + b.y + ")" +
         // "c:(" + c.x +"," + c.y + ")" +
@@ -386,7 +400,7 @@ function renderArm(){
 	// let wrist = NetworkTables.getValue(addresses.arm.wrist.rotation)
 	//consts
     let yMax = ui.arm.canvas.height
-    let xMid = 20 
+    let xMid = 10
     let yMid = yMax/2
 
 
@@ -414,6 +428,41 @@ function renderArm(){
     ct.stroke()
     
 }
+
+function rectange(){
+    return {
+        a: {x:0,y:0},
+        b: {x:0,y:0},
+        c: {x:0,y:0},
+        d: {x:0,y:0}
+    }
+}
+
+function renderRotatedRectangle(ct,ver,rot,x,y){
+    let rotation = function(x,y,sin,cos,addX,addY){
+        let obj = {}
+        obj.x = (x*cos - y*sin) + addX
+        obj.y = (x*sin + y*cos) + addY
+        return obj
+    }
+
+    let sin = Math.sin(rot * (Math.PI/180))
+    let cos = Math.cos(rot * (Math.PI/180))
+
+    let a1 = rotation(ver.a.x,ver.a.y,sin,cos,x,y)
+    let b1 = rotation(ver.b.x,ver.b.y,sin,cos,x,y)
+    let c1 = rotation(ver.c.x,ver.c.y,sin,cos,x,y)
+    let d1 = rotation(ver.d.x,ver.d.y,sin,cos,x,y)
+    ct.beginPath()
+    ct.moveTo(a1.x,a1.y)
+    ct.lineTo(b1.x,b1.y)
+    ct.lineTo(c1.x,c1.y)
+    ct.lineTo(d1.x,d1.y)
+    ct.lineTo(a1.x,a1.y)
+    ct.fill()
+}
+
+
 
 NetworkTables.addKeyListener('' + addresses.arm.mainArm.rotation,()=>{
     renderArm()

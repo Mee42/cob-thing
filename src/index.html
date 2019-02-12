@@ -8,22 +8,36 @@
 </head>
 
 <body>
-      <canvas id="arm" width="500px" height="500px"></canvas><br />
-      <canvas id="timer" width="250px" height="250px"></canvas><br />
-      <canvas id="view" width="980px" height="540px"></canvas><br />
-      <canvas id="robot" width="500px" height="500px"></canvas><br />
-      <br />
-      <input type="range" min="0" max="180" value="50" class="slider" id="dev-timer"><br />
-      <input type="range" min="0" max="180" value="50" class="slider" id="dev-arm"><br />
-      <input type="range" min="0" max="180" value="50" class="slider" id="dev-wrist"><br />
+      <div>
+        <canvas id="arm" width="240px" height="583px">Ya need html5,</canvas>
+      </div>
+      <div style="position:absolute; top:0px; left:512px; z-index:2;">
+        <canvas id="timer" width="250px" height="250px">Ya need html5,</canvas>
+      </div>
+
+      <div style="position: absolute; top:50%; left:637px; z-index:1;">
+        <canvas id="view" width="980px" height="540px">Ya need html5,</canvas>
+      </div>
       
+      <div style="position:absolute; top:0px; left:254px; z-index: 1">
+        <canvas id="robot" width="254px" height="254px">Ya need html5,</canvas>
+      </div>
+      <div style="position:absolute; top:233px; left:254px; z-index: 1">
+        <canvas id="wrist" width="250px" height="250px">Ya need html5,</canvas>
+      </div>
+
+      <div id="dev" hidden="true">
+        <input type="range" min="0" max="180" value="50" class="slider" id="dev-timer"><br />
+        <input type="range" min="0" max="180" value="50" class="slider" id="dev-arm"><br />
+        <input type="range" min="0" max="180" value="50" class="slider" id="dev-wrist"><br />
+      </div>
 
 
-  <div id="login" class="overlay">
+  <div id="login" class="overlay" style="z-index: 3">
     <!-- Overlay content -->
-    <div class="overlay-content">
-        <input id="connect-address" type="text" value="10.6.23.2">
-        <button id="connect">Connecting</button>
+    <div class="overlay-content" style="z-index: inherit">
+        <input id="connect-address" type="text" value="10.6.23.2" style="z-index: inherit">
+        <button id="connect" style="z-index: inherit">Connecting</button>
     </div>
 
   </div>
