@@ -20,6 +20,7 @@ cob: {
         wrist: {
             rotation: "/cob/arm/wrist/rotation",
             vacuum: "/cob/arm/wrist/vacuum",
+            hatch: "/cob/arm/wrist/is-hatch"
         },
     },
     robot: {
