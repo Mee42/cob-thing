@@ -92,6 +92,17 @@ let ui = {
 	}
 };
 
+//memoizeation
+var sine = function(rot) {
+    return Math.sin(Math.floor(rot) * (Math.PI/180))
+};
+var cos = function(rot) {
+    return Math.cos(Math.floor(rot) * (Math.PI/180))
+};
+
+ 
+let sinM = memoize(sine);
+let cosM = memoize(cos)
 
 
 
@@ -266,6 +277,9 @@ function renderView(){
     let ct = ui.view.canvas.getContext("2d")
     let xMax = 980
     let yMax = 540
+    // 1/2 : 2
+    // 3/4 : 4/3
+    let scale = 4.0/3.0
     let centerX = NetworkTables.getValue('' + addresses.vision.centerX)
     
     let centerY = NetworkTables.getValue('' + addresses.vision.centerY)
@@ -285,11 +299,11 @@ function renderView(){
         heightA != undefined && heightA[i] != undefined &&
         widthA != undefined && widthA[i] != undefined &&
         angleA != undefined && angleA[i] != undefined){
-        let x = centerX[i]/2
-        let y = centerY[i]/2
-        let height = heightA[i]/2
+        let x = centerX[i]/scale
+        let y = centerY[i]/scale
+        let height = heightA[i]/scale
         let h = height/2//THis is for calculations, makes stuff easier
-        let width = widthA[i]/2
+        let width = widthA[i]/scale
         let w = width/2//see above
         let angle = angleA[i]
         if(height < width){
@@ -304,7 +318,7 @@ function renderView(){
         ver.d = {x:-w,y:+h}
         
         renderRotatedRectangle(ct,ver,angle,x,y)
-        let TEST = true
+        let TEST = false
         if(TEST){
             console.log("a:(" + ver.a.x +"," + ver.a.y + ")" +
             "b:(" + ver.b.x +"," + ver.b.y + ")" +
@@ -312,7 +326,7 @@ function renderView(){
             "d:(" + ver.d.x +"," + ver.d.y + ")")
         }
         //to set the scale value
-        let newScale = height/(167/2)
+        let newScale = height/(167/scale)
         if(scaleFactor == undefined || newScale > scaleFactor){
             scaleFactor = newScale
         }
@@ -339,17 +353,20 @@ b:(258.66910629571714,43.399739517058215)
 c:(234.67167179532186,128.59060292304298)
 d:(265.58492202459536,137.29856370559804)
     */
-   console.log("scale:" + scaleFactor)
-    let a2 = {x:473,y:128}
-    let b2 = {x:455,y:50}
-    let c2 = {x:422,y:56}
-    let d2 = {x:440,y:145}
+//    console.log("scale:" + scaleFactor)
+    scale/=2.0//offset so cords are correfct
+    let a2 = {x:473/scale,y:138/scale}
+    let b2 = {x:455/scale,y:50/scale}
+    let c2 = {x:422/scale,y:56/scale}
+    let d2 = {x:440/scale,y:145/scale}
 
-    let a1 = {x:289,y:52}
-    let b1 = {x:258,y:43}
-    let c1 = {x:234,y:128}
-    let d1 = {x:265,y:137}
-
+    // let a1 = {x:178/scale,y:104/scale}
+    let a1 = {x:289/scale,y:52/scale}
+    // let b1 = {x:116/scale,y:86/scale}
+    let b1 = {x:258/scale,y:43/scale}
+    let c1 = {x:234/scale,y:128/scale}
+    let d1 = {x:265/scale,y:137/scale}
+    scale*=2.0
     let c = {x:d1.x,y:d1.y}
 
 
@@ -473,8 +490,8 @@ function renderArm(){
 
 	ct.moveTo(xMid,yMax)
 	ct.lineTo(xMid,yMid);//the middle of the default size
-	let newX = Math.cos(mainArmRotation * (Math.PI / 180))*armLength + xMid
-	let newY = Math.sin(mainArmRotation * (Math.PI / 180))*armLength + yMid
+	let newX = cosM(mainArmRotation)*armLength + xMid
+	let newY = sinM(mainArmRotation)*armLength + yMid
     ct.lineTo(newX,newY)
     let wristX = Math.cos(wristArmRotation * (Math.PI / 180))*wristLength + newX
     let wristY = Math.sin(wristArmRotation * (Math.PI / 180))*wristLength + newY
@@ -493,6 +510,7 @@ function rectange(){
     }
 }
 
+
 function renderRotatedRectangle(ct,ver,rot,x,y){
     let rotation = function(x,y,sin,cos,addX,addY){
         let obj = {}
@@ -501,8 +519,8 @@ function renderRotatedRectangle(ct,ver,rot,x,y){
         return obj
     }
 
-    let sin = Math.sin(rot * (Math.PI/180))
-    let cos = Math.cos(rot * (Math.PI/180))
+    let sin = sinM(rot)
+    let cos = cosM(rot)
 
     let a1 = rotation(ver.a.x,ver.a.y,sin,cos,x,y)
     ver.a = a1
