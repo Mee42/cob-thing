@@ -17,6 +17,7 @@ let addresses = {
         wrist: {
             rotation: "/cob/arm/wrist/rotation",
             vacuum: "/cob/arm/wrist/vacuum",
+            hatch: "/cob/arm/wrist/is-hatch"
         },
     },
     robot: {
@@ -44,6 +45,8 @@ function initAllDatapoints(){
     NetworkTables.putValue(addresses.arm.mainArm.rotation,0)
     NetworkTables.putValue(addresses.arm.wrist.rotation,0)
     NetworkTables.putValue(addresses.arm.wrist.vacuum,false)
+    NetworkTables.putValue(addresses.arm.wrist.hatch,false)
+    
     NetworkTables.putValue(addresses.robot.isSandstorm,false)
     NetworkTables.putValue(addresses.robot.isTeleop,false)
     NetworkTables.putValue(addresses.robot.isEnabled,false)
@@ -155,7 +158,7 @@ function fullRender(){
 }
 
 function renderWrist(){
-
+    console.log("rendering wrist")
     if(!NetworkTables.isRobotConnected()){
         //if not connected, we can't render this - just to be safe
         return
@@ -167,8 +170,40 @@ function renderWrist(){
     let ct = ui.wrist.canvas.getContext("2d")
     let xMax = ui.wrist.canvas.width
     let yMax = ui.wrist.canvas.height
-    let max = (xMax == yMax) ? xMax : undefined
+    
+    //get data
+    let vacuumOn = NetworkTables.getValue('' + addresses.arm.wrist.vacuum)
+    let hatch = NetworkTables.getValue('' + addresses.arm.wrist.hatch)
+
+    let r = 50
+
+    ct.strokeStyle = 'sliver'
+    
+    if(vacuumOn){
+
+        let grd = ct.createLinearGradient(0, 0, xMax, 0);
+        grd.addColorStop(1, "blue");
+        grd.addColorStop(0, "white");
+
+        ct.fillStyle = grd;
+    }else{
+        ct.fillStyle = 'white'
+
+    }
     ct.fillRect(0,0,xMax,yMax)
+
+
+    ct.beginPath()
+    // ct.moveTo(0,0)
+    ct.moveTo(4 * r, yMax/2 - r + (hatch ? 0 : 1/2*r))
+    ct.lineTo(2 * r,yMax/2 -r)
+    ct.lineTo(r,yMax/2)
+    ct.lineTo(2 * r,yMax/2 + r)
+    ct.lineTo(4 * r, yMax/2 + r - (hatch ? 0 : 1/2*r))
+    ct.lineWidth = r;
+    ct.lineJoin = "round";
+
+    ct.stroke()
 }
 
 function renderRobot(){
@@ -245,12 +280,16 @@ function renderView(){
 
     ct.fillStyle = 'green'
     let i = -1
-    while(centerX != undefined && centerX[++i] != undefined){
-        let x = centerX[i]
-        let y = centerY[i]
-        let height = heightA[i]
+    while(centerX != undefined && centerX[++i] != undefined &&
+        centerY != undefined && centerY[i] != undefined &&
+        heightA != undefined && heightA[i] != undefined &&
+        widthA != undefined && widthA[i] != undefined &&
+        angleA != undefined && angleA[i] != undefined){
+        let x = centerX[i]/2
+        let y = centerY[i]/2
+        let height = heightA[i]/2
         let h = height/2//THis is for calculations, makes stuff easier
-        let width = widthA[i]
+        let width = widthA[i]/2
         let w = width/2//see above
         let angle = angleA[i]
         if(height < width){
@@ -265,43 +304,44 @@ function renderView(){
         ver.d = {x:-w,y:+h}
         
         renderRotatedRectangle(ct,ver,angle,x,y)
-        // console.log("a:(" + a.x +"," + a.y + ")" +
-        // "b:(" + b.x +"," + b.y + ")" +
-        // "c:(" + c.x +"," + c.y + ")" +
-        // "d:(" + d.x +"," + d.y + ")")
+        // console.log("a:(" + ver.a.x +"," + ver.a.y + ")" +
+        // "b:(" + ver.b.x +"," + ver.b.y + ")" +
+        // "c:(" + ver.c.x +"," + ver.c.y + ")" +
+        // "d:(" + ver.d.x +"," + ver.d.y + ")")
         //to set the scale value
-        let newScale = height/171
+        let newScale = height/(167/2)
         if(scaleFactor == undefined || newScale > scaleFactor){
             scaleFactor = newScale
         }
         
     }
     /*
+a:(485.57822994427727,160.08644417561493)
+b:(465.3576041381055,73.1377541153606)
+c:(431.645952184629,80.9776732560257)
+d:(451.86657799080075,167.92636331628003)
 
-    a:(427.2,261)
-    b:(453.1,88.3)
-    c:(515.4,97.7)
-    d:(489.5,270.4)
-
-    a:(772.8,77.8)
-    b:(831.7,58)
-    c:(887.2,223.4)
-    d:(828.4,243.2)
-
+a:(301.06389439451357,80.09744224105077)
+b:(272.2785911264726,71.7648535083116)
+c:(249.1188448632989,151.77124062027735)
+d:(277.9041481313399,160.10382935301652)
     */
-    let a1 = {x:427.2,y:261}
-    let b1 = {x:453.1,y:88.3}
-    let c1 = {x:515.4,y:97.7}
-    let d1 = {x:489.5,y:270.4}
+   console.log("scale:" + scaleFactor)
+    let a1 = {x:485,y:160}
+    let b1 = {x:465,y:73}
+    let c1 = {x:431,y:80}
+    let d1 = {x:451,y:167}
 
-    let a2 = {x:772.8,y:77.8}
-    let b2 = {x:831.7,y:58}
-    let c2 = {x:887.2,y:223.4}
-    let d2 = {x:828.4,y:243.2}
-    
+    let a2 = {x:301,y:80}
+    let b2 = {x:272,y:71}
+    let c2 = {x:249,y:151}
+    let d2 = {x:277,y:160}
+
     let c = {x:d1.x,y:d1.y}
 
+
     let arr = [a1,b1,c1,d1,a2,b2,c2,d2]
+
     // console.log(arr)
     // for(ar in arr){
     //for some reason the line of code above doesn't work
@@ -415,7 +455,9 @@ function renderArm(){
     ct.fillStyle = '#bbb'
 
 	ct.fillRect(0, 0, ui.arm.canvas.width, ui.arm.canvas.height);
-	ct.beginPath()
+    ct.beginPath()
+    ct.lineWidth = 3;
+
 	ct.moveTo(xMid,yMax)
 	ct.lineTo(xMid,yMid);//the middle of the default size
 	let newX = Math.cos(mainArmRotation * (Math.PI / 180))*armLength + xMid
@@ -450,9 +492,13 @@ function renderRotatedRectangle(ct,ver,rot,x,y){
     let cos = Math.cos(rot * (Math.PI/180))
 
     let a1 = rotation(ver.a.x,ver.a.y,sin,cos,x,y)
+    ver.a = a1
     let b1 = rotation(ver.b.x,ver.b.y,sin,cos,x,y)
+    ver.b = b1
     let c1 = rotation(ver.c.x,ver.c.y,sin,cos,x,y)
+    ver.c = c1
     let d1 = rotation(ver.d.x,ver.d.y,sin,cos,x,y)
+    ver.d = d1
     ct.beginPath()
     ct.moveTo(a1.x,a1.y)
     ct.lineTo(b1.x,b1.y)
@@ -504,6 +550,13 @@ NetworkTables.addKeyListener('' + addresses.location.rotation,()=>{
     renderRobot();
 })
 
+NetworkTables.addKeyListener('' + addresses.arm.wrist.vacuum, ()=> {
+    renderWrist();
+})
+
+NetworkTables.addKeyListener('' + addresses.arm.wrist.hatch, ()=> {
+    renderWrist();
+})
 
 
 //dev input
