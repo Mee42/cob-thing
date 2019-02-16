@@ -231,7 +231,7 @@ function renderRobot(){
     let xMax = ui.robot.canvas.width
     let yMax = ui.robot.canvas.height
     let angle = NetworkTables.getValue('' + addresses.location.rotation)
-    angle = Math.abs(angle + 360) % 360
+    angle = (angle + 360 + 180) % 360
     ct.fillStyle = 'white'
 
     ct.beginPath();
