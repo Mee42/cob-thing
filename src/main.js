@@ -8,7 +8,7 @@ const ipc = electron.ipcMain;
 const wpilib_NT = require('wpilib-nt-client');
 const client = new wpilib_NT.Client();
 
-const DEBUG = true
+const DEBUG = false
 
 let connected,
     ready = false;
