@@ -15,9 +15,9 @@ Add anything new here first, and then cob.h/cpp and renderer.js, before working 
 `/cob/arm/wrist/rotation` | Number | 0-360 | The rotation of the wrist | ✔️ | ✖️ | ✔️
 `/cob/arm/wrist/vacuum` | Boolean | True/False | The on/off state of the vacuum | ✔️ | ✖️ | ✔️
 `/cob/arm/wrist/hatch` | Boolean | True/False | Whether or not the wrist is in hatch mode | ✔️ | ✖️ | ✔️
-`/cob/robot/is-sandstorm` | Boolean | True/False | If it is currently sandstorm | ✖️ | ✖️ | ✔️
-`/cob/robot/is-teleop` | Boolean | True/False | If it is currently teleop | ✖️ | ✖️ | ✔️
-`/cob/robot/is-enabled` | Boolean | True/False | If the robot is currently enabled | ✖️ | ✖️ | ✔️
+`/cob/robot/is-sandstorm` | Boolean | True/False | If it is currently sandstorm | ✖️ | ✖️ | ✖️
+`/cob/robot/is-teleop` | Boolean | True/False | If it is currently teleop | ✖️ | ✖️ | ✖️
+`/cob/robot/is-enabled` | Boolean | True/False | If the robot is currently enabled | ✖️ | ✖️ | ✖️
 `/cob/robot/is-field-oriented` | Boolean | True/False | If the robot is currently field oriented | ✖️ | ✔️ | ✔️ 
 `/cob/fms/time-left` | Number | 0+ | The time left, in seconds, in the match | ✔️ | ✖️ | ✔️
 `/cob/fms/is-red` | Boolean | True/False | If the robot is on team red | ✔️ | ✖️ | ✔️
