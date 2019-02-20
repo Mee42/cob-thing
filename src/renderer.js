@@ -354,7 +354,6 @@ c:(234.67167179532186,128.59060292304298)
 d:(265.58492202459536,137.29856370559804)
     */
 //    console.log("scale:" + scaleFactor)
-    scaleFactor = 1;
     scale/=2.0//offset so cords are correfct
     let a2 = {x:473/scale,y:138/scale}
     let b2 = {x:455/scale,y:50/scale}
@@ -370,6 +369,25 @@ d:(265.58492202459536,137.29856370559804)
     scale*=2.0
     let c = {x:d1.x,y:d1.y}
 
+    let scaleFactorX = scaleFactor;
+
+    scaleFactor = 1
+    ct.strokeStyle = 'red'
+    ct.beginPath()
+    ct.moveTo(a1.x,a1.y)
+    ct.lineTo(b1.x,b1.y)
+    ct.lineTo(c1.x,c1.y)
+    ct.lineTo(d1.x,d1.y)
+    ct.lineTo(a1.x,a1.y)
+    
+    ct.moveTo(a2.x,a2.y)
+    ct.lineTo(b2.x,b2.y)
+    ct.lineTo(c2.x,c2.y)
+    ct.lineTo(d2.x,d2.y)
+    ct.lineTo(a2.x,a2.y)
+
+    ct.stroke()
+    scaleFactor = scaleFactorX
 
     let arr = [a1,b1,c1,d1,a2,b2,c2,d2]
 
