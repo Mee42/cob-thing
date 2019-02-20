@@ -354,6 +354,7 @@ c:(234.67167179532186,128.59060292304298)
 d:(265.58492202459536,137.29856370559804)
     */
 //    console.log("scale:" + scaleFactor)
+    scaleFactor = 1;
     scale/=2.0//offset so cords are correfct
     let a2 = {x:473/scale,y:138/scale}
     let b2 = {x:455/scale,y:50/scale}
