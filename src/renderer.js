@@ -24,6 +24,7 @@ let addresses = {
         isSandstorm: "/cob/robot/is-sandstorm",
         isTeleop: "/cob/robot/is-teleop",
         isEnabled: "/cob/robot/is-enabled",
+        isField : "/cob/robot/is-field-oriented"
     },
     fms: {
         timeLeft: "/cob/fms/time-left",
@@ -50,6 +51,8 @@ function initAllDatapoints(){
     NetworkTables.putValue(addresses.robot.isSandstorm,false)
     NetworkTables.putValue(addresses.robot.isTeleop,false)
     NetworkTables.putValue(addresses.robot.isEnabled,false)
+    NetworkTables.putValue(addresses.robot.isField,false)
+
     NetworkTables.putValue(addresses.fms.timeLeft,180)
     NetworkTables.putValue(addresses.fms.isRed,false)
     
@@ -69,7 +72,8 @@ let ui = {
 		canvas : document.getElementById('arm'), //the arm canvass
     },
     timer: {
-        canvas : document.getElementById('timer')
+        canvas : document.getElementById('timer'),
+        field : document.getElementById('field')
     },
     view: {
         canvas :document.getElementById('view')  
@@ -138,9 +142,9 @@ function onRobotConnection(connected) {
 		// connect.disabled = false;
 		connect.firstChild.data = 'Connect';
 		// CHANGE THIS VALUE TO YOUR ROBOT'S IP ADDRESS
-		// address.value = '10.6.23.2';
+		address.value = 'roborio-62X-frc.local';
 		address.focus();
-        // address.setSelectionRange(8, 12);
+        address.setSelectionRange(10,11);
         
 		// On click try to connect and disable the input and the button
 		connect.onclick = () => {
@@ -470,6 +474,12 @@ function renderTimer(){
     
     let text = '' + Math.floor(time/60) + ':' + Math.floor(time%60)
     ct.fillText(text, max/2, max/2+20);//30px text, 15px ajustment?
+
+    ui.timer.field.textContent = (
+        ('' + NetworkTables.getValue('' + addresses.robot.isField) == 'true') ? "Field Oriented" : "Robot Oriented"
+    )
+
+    console.log(NetworkTables.getValue('' + addresses.robot.isField))
 }
 
 function renderArm(){
@@ -572,10 +582,10 @@ NetworkTables.addKeyListener('' + addresses.arm.wrist.rotation,()=>{
 NetworkTables.addKeyListener('' + addresses.fms.timeLeft,()=>{
     renderTimer();
 },false)
-NetworkTables.addKeyListener('' + addresses.fms.isRed,()=>{
+
+NetworkTables.addKeyListener('' + addresses.robot.isField,()=>{
     renderTimer();
 },false)
-
 NetworkTables.addKeyListener('' + addresses.vision.centerX,()=>{
     renderView();
 },false)
