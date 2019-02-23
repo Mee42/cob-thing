@@ -21,3 +21,27 @@ Add anything new here first, and then cob.h/cpp and renderer.js, before working 
 `/cob/robot/is-field-oriented` | True/False | If the robot is currently field oriented | ✔️ | ✔️ | ✔️ 
 `/cob/fms/time-left` | 0+ | The time left, in seconds, in the match | ✔️ | ✖️ | ✔️
 `/cob/fms/is-red` | True/False | If the robot is on team red | ✔️ | ✖️ | ✔️
+
+
+Here are the values for the arm position values:
+
+```
+cob: {
+    arm-positions: {
+      cargo: {
+         rocket-high:"/cob/arm-position/rocket-high"
+         rocket-mid:"/cob/arm-position/rocket-mid"
+         rocket-low:"/cob/arm-position/rocket-low"
+         ground:"/cob/arm-position/cargo/ground"
+         ship:"/cob/arm-position/cargo/ship"
+      },
+      hatch: {
+        low:"/cob/arm-position/hatch/low"
+        mid:"/cob/arm-position/hatch/mid"
+        high:"/cob/arm-position/hatch/high"
+      }
+      secure: "/cob/arm-position/secure"
+      alley-oop: "/cob/arm-position/alley-oop"
+    }
+}
+```
