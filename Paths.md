@@ -42,6 +42,22 @@ cob: {
       }
       secure: "/cob/arm-position/secure"
       alley-oop: "/cob/arm-position/alley-oop"
-    }
+    },
+    wrist-position: {
+          cargo: {
+         rocket-high:"/cob/arm-position/rocket-high"
+         rocket-mid:"/cob/arm-position/rocket-mid"
+         rocket-low:"/cob/arm-position/rocket-low"
+         ground:"/cob/arm-position/cargo/ground"
+         ship:"/cob/arm-position/cargo/ship"
+      },
+      hatch: {
+        low:"/cob/arm-position/hatch/low"
+        mid:"/cob/arm-position/hatch/mid"
+        high:"/cob/arm-position/hatch/high"
+      }
+      secure: "/cob/arm-position/secure"
+      alley-oop: "/cob/arm-position/alley-oop"
+   }
 }
 ```
