@@ -18,6 +18,6 @@ Add anything new here first, and then cob.h/cpp and renderer.js, before working 
 `/cob/robot/is-sandstorm` | True/False | If it is currently sandstorm | ✖️ | ✖️ | ✖️
 `/cob/robot/is-teleop` | True/False | If it is currently teleop | ✖️ | ✖️ | ✖️
 `/cob/robot/is-enabled` | True/False | If the robot is currently enabled | ✖️ | ✖️ | ✖️
-`/cob/robot/is-field-oriented` | True/False | If the robot is currently field oriented | ✖️ | ✔️ | ✔️ 
+`/cob/robot/is-field-oriented` | True/False | If the robot is currently field oriented | ✔️ | ✔️ | ✔️ 
 `/cob/fms/time-left` | 0+ | The time left, in seconds, in the match | ✔️ | ✖️ | ✔️
 `/cob/fms/is-red` | True/False | If the robot is on team red | ✔️ | ✖️ | ✔️
