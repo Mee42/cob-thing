@@ -36,6 +36,9 @@ let addresses = {
         height: "/vision/height",
         angle: "/vision/angle",
         width: "/vision/width"        
+    },
+    ak : {
+        isPressed: "ak/is-pressed"
     }
 }
 
@@ -61,6 +64,8 @@ function initAllDatapoints(){
     NetworkTables.putValue(addresses.vision.height,[])
     NetworkTables.putValue(addresses.vision.angle,[])
     NetworkTables.putValue(addresses.vision.width,[])
+    NetworkTables.putValue(addresses.ak.isPressed,false)
+    
 }
 
 
@@ -197,7 +202,8 @@ function renderWrist(){
     if(vacuumOn){
 
         let grd = ct.createLinearGradient(0, 0, xMax, 0);
-        grd.addColorStop(1, "blue");
+        let color =  NetworkTables.getValue('' + addresses.ak.isPressed) ? 'red' : 'blue'
+        grd.addColorStop(1, color);
         grd.addColorStop(0, "white");
 
         ct.fillStyle = grd;
@@ -617,6 +623,10 @@ NetworkTables.addKeyListener('' + addresses.arm.wrist.vacuum, ()=> {
 NetworkTables.addKeyListener('' + addresses.arm.wrist.hatch, ()=> {
     renderWrist();
 })
+NetworkTables.addKeyListener('' + addresses.ak.isPressed, ()=> {
+    renderWrist();
+})
+
 
 
 //dev input

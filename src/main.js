@@ -8,7 +8,8 @@ const ipc = electron.ipcMain;
 const wpilib_NT = require('wpilib-nt-client');
 const client = new wpilib_NT.Client();
 
-const DEBUG = true
+const DEBUG = false
+
 
 let connected,
     ready = false;
@@ -105,9 +106,13 @@ ipc.on('update', (ev, mesg) => {
   if(DEBUG){
     win.webContents.openDevTools()
   }
-}
 
+}
 app.on('ready', createWindow)
+
+
+var child = require("child_process");
+child.exec("\"C:\\\\Program Files\\VideoLAN\\VLC\\vlc.exe\" --network-caching=0 rtsp://admin:frc623frc@ds-2cd2423g0-iw20180425aawrc15020658.local/ISAPI/Streaming/channels/102 --sout-x264-tune=zerolatency --postproc-q=0 --sout-x264-crf=0"); 
 
 
 app.on('window-all-closed', function () {
