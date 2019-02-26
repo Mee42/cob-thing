@@ -21,7 +21,7 @@ Add anything new here first, and then cob.h/cpp and renderer.js, before working 
 `/cob/robot/is-field-oriented` | True/False | If the robot is currently field oriented | ✔️ | ✔️ | ✔️ 
 `/cob/fms/time-left` | 0+ | The time left, in seconds, in the match | ✔️ | ✖️ | ✔️
 `/cob/fms/is-red` | True/False | If the robot is on team red | ✔️ | ✖️ | ✔️
-`/cob/ak/is-pressed` | True/False | If the hatch is pressed against the wall | ✖️ | ✖️ | ✔️
+`/cob/ak/is-pressed` | True/False | If the hatch is pressed against the wall | ✔️ | ✖️ | ✔️
 
 
 Here are the values for the arm position values:
