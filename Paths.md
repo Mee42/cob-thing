@@ -46,7 +46,7 @@ cob: {
         alley-oop: "/cob/arm-position/hatch/alley-oop"
       }
     }
-    wrist-positions: {
+    wrist-position: {
       cargo: {
          rocket-high:"/cob/wrist-position/cargo/high"
          rocket-mid:"/cob/wrist-position/cargo/mid"
