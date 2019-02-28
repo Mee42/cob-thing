@@ -30,35 +30,39 @@ Here are the values for the arm position values:
 cob: {
     arm-positions: {
       cargo: {
-         rocket-high:"/cob/arm-position/rocket-high"
-         rocket-mid:"/cob/arm-position/rocket-mid"
-         rocket-low:"/cob/arm-position/rocket-low"
+         rocket-high:"/cob/arm-position/cargo/high"
+         rocket-mid:"/cob/arm-position/cargo/mid"
+         rocket-low:"/cob/arm-position/cargo/low"
          ground:"/cob/arm-position/cargo/ground"
          ship:"/cob/arm-position/cargo/ship"
-      },
+         secure: "/cob/arm-position/cargo/secure"
+         alley-oop: "/cob/arm-position/cargo/alley-oop"
+      }
       hatch: {
         low:"/cob/arm-position/hatch/low"
         mid:"/cob/arm-position/hatch/mid"
-        high:"/cob/arm-position/hatch/high"
+        high:"/cob/arm-position/hatch/high" 
+        secure: "/cob/arm-position/hatch/secure"
+        alley-oop: "/cob/arm-position/hatch/alley-oop"
       }
-      secure: "/cob/arm-position/secure"
-      alley-oop: "/cob/arm-position/alley-oop"
-    },
-    wrist-position: {
-          cargo: {
-         rocket-high:"/cob/arm-position/rocket-high"
-         rocket-mid:"/cob/arm-position/rocket-mid"
-         rocket-low:"/cob/arm-position/rocket-low"
-         ground:"/cob/arm-position/cargo/ground"
-         ship:"/cob/arm-position/cargo/ship"
-      },
+    }
+    wrist-positions: {
+      cargo: {
+         rocket-high:"/cob/wrist-position/cargo/high"
+         rocket-mid:"/cob/wrist-position/cargo/mid"
+         rocket-low:"/cob/wrist-position/cargo/low"
+         ground:"/cob/wrist-position/cargo/ground"
+         ship:"/cob/wrist-position/cargo/ship"
+         secure: "/cob/wrist-position/cargo/secure"
+         alley-oop: "/cob/wrist-position/cargo/alley-oop"
+      }
       hatch: {
-        low:"/cob/arm-position/hatch/low"
-        mid:"/cob/arm-position/hatch/mid"
-        high:"/cob/arm-position/hatch/high"
+        low:"/cob/wrist-position/hatch/low"
+        mid:"/cob/wrist-position/hatch/mid"
+        high:"/cob/wrist-position/hatch/high" 
+        secure: "/cob/wrist-position/hatch/secure"
+        alley-oop: "/cob/wrist-position/hatch/alley-oop"
       }
-      secure: "/cob/arm-position/secure"
-      alley-oop: "/cob/arm-position/alley-oop"
-   }
+    }
 }
 ```
