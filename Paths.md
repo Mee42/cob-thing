@@ -64,6 +64,6 @@ cob: {
         alley-oop: "/cob/wrist-position/hatch/alley-oop"
       }
     }
-    pull-position: "/cob/pull-position"
+    pull-position: "/cob/arm/pull-position"
 }
 ```
