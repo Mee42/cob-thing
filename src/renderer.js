@@ -28,7 +28,7 @@ let addresses = {
     },
     fms: {
         timeLeft: "/cob/fms/time-left",
-        isRed: "/cob/fms/is-red",
+        isRed: "/FMSInfo/IsRedAlliance",
     },
     vision: {
         centerX: "/vision/centerX",
@@ -38,7 +38,7 @@ let addresses = {
         width: "/vision/width"        
     },
     ak : {
-        isPressed: "ak/is-pressed"
+        isPressed: "/cob/ak/is-pressed"
     }
 }
 
@@ -202,7 +202,12 @@ function renderWrist(){
     if(vacuumOn){
 
         let grd = ct.createLinearGradient(0, 0, xMax, 0);
-        let color =  NetworkTables.getValue('' + addresses.ak.isPressed) ? 'red' : 'blue'
+        let ak = NetworkTables.getValue('' + addresses.ak.isPressed)
+        console.log(ak)
+        ak = (('' + ak) == 'true') ? true : false
+        console.log(ak)
+        let color =  ak ? 'red' : 'blue'
+        console.log(color)
         grd.addColorStop(1, color);
         grd.addColorStop(0, "white");
 
@@ -498,11 +503,16 @@ function renderArm(){
         console.log("unable to render arm due to context undefined")
         return
     }
+    //
+    let pot = 2.47777
 	let mainArmRotation = NetworkTables.getValue('' + addresses.arm.mainArm.rotation)
-    mainArmRotation = (mainArmRotation - 90) % 360
+    mainArmRotation = -1 *(((mainArmRotation / pot) % 360) - 90 + 25)
+    console.log("arm:" + mainArmRotation)
     let wristArmRotation = NetworkTables.getValue('' + addresses.arm.wrist.rotation)
-    wristArmRotation = (wristArmRotation + 0/*ajustment value*/) % 360//keep it below 360
-	// let wrist = NetworkTables.getValue(addresses.arm.wrist.rotation)
+    let wristpot = 1
+    wristArmRotation = ((wristArmRotation / wristpot)%360) + 0//keep it below 360
+    console.log("wrist:" + wristArmRotation)
+    // let wrist = NetworkTables.getValue(addresses.arm.wrist.rotation)
 	//consts
     let yMax = ui.arm.canvas.height
     let xMid = 10
