@@ -34,7 +34,7 @@ let clientDataListener = (key, val, valType, mesgType, id, flags) => {
 
 function createWindow () {
   // Create the browser window.
-  
+
   win = new BrowserWindow({
      width: 1539,
     height: 631,
@@ -92,9 +92,9 @@ ipc.on('update', (ev, mesg) => {
   // and load the index.html of the app.
   // win.loadFile('index.html')
   win.loadURL(`file://${__dirname}/index.html`);
- 
-  win.once('ready-to-show', () => { 
-    win.show(); 
+
+  win.once('ready-to-show', () => {
+    win.show();
     win.webContents.send('start')
   })//don't show until ready
   win.on('closed', () => { win = null })
@@ -112,7 +112,7 @@ app.on('ready', createWindow)
 
 
 var child = require("child_process");
-child.exec("\"C:\\\\Program Files\\VideoLAN\\VLC\\vlc.exe\" --network-caching=0 rtsp://admin:frc623frc@ds-2cd2423g0-iw20180425aawrc15020658.local/ISAPI/Streaming/channels/102 --sout-x264-tune=zerolatency --postproc-q=0 --sout-x264-crf=0"); 
+child.exec("\"C:\\\\Program Files\\VideoLAN\\VLC\\vlc.exe\" --network-caching=0 rtsp://admin:frc623frc@ds-2cd2423g0-iw20180425aawrc15020658.local/ISAPI/Streaming/channels/102 --sout-x264-tune=zerolatency --postproc-q=0 --sout-x264-crf=0");
 
 
 app.on('window-all-closed', function () {
@@ -128,4 +128,3 @@ app.on('activate', function () {
     createWindow()
   }
 })
-

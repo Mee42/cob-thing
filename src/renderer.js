@@ -35,7 +35,7 @@ let addresses = {
         centerY: "/vision/centerY",
         height: "/vision/height",
         angle: "/vision/angle",
-        width: "/vision/width"        
+        width: "/vision/width"
     },
     ak : {
         isPressed: "/cob/ak/is-pressed"
@@ -50,7 +50,7 @@ function initAllDatapoints(){
     NetworkTables.putValue(addresses.arm.wrist.rotation,0)
     NetworkTables.putValue(addresses.arm.wrist.vacuum,false)
     NetworkTables.putValue(addresses.arm.wrist.hatch,false)
-    
+
     NetworkTables.putValue(addresses.robot.isSandstorm,false)
     NetworkTables.putValue(addresses.robot.isTeleop,false)
     NetworkTables.putValue(addresses.robot.isEnabled,false)
@@ -58,14 +58,14 @@ function initAllDatapoints(){
 
     NetworkTables.putValue(addresses.fms.timeLeft,180)
     NetworkTables.putValue(addresses.fms.isRed,false)
-    
+
     NetworkTables.putValue(addresses.vision.centerX,[])
     NetworkTables.putValue(addresses.vision.centerY,[])
     NetworkTables.putValue(addresses.vision.height,[])
     NetworkTables.putValue(addresses.vision.angle,[])
     NetworkTables.putValue(addresses.vision.width,[])
     NetworkTables.putValue(addresses.ak.isPressed,false)
-    
+
 }
 
 
@@ -81,7 +81,7 @@ let ui = {
         field : document.getElementById('field')
     },
     view: {
-        canvas :document.getElementById('view')  
+        canvas :document.getElementById('view')
     },
     robot: {
         canvas : document.getElementById('robot')
@@ -109,7 +109,7 @@ var cos = function(rot) {
     return Math.cos(Math.floor(rot) * (Math.PI/180))
 };
 
- 
+
 let sinM = memoize(sine);
 let cosM = memoize(cos)
 
@@ -150,7 +150,7 @@ function onRobotConnection(connected) {
 		address.value = 'roborio-62X-frc.local';
 		address.focus();
         address.setSelectionRange(10,11);
-        
+
 		// On click try to connect and disable the input and the button
 		connect.onclick = () => {
             console.log("connect button clicked")
@@ -190,7 +190,7 @@ function renderWrist(){
     let ct = ui.wrist.canvas.getContext("2d")
     let xMax = ui.wrist.canvas.width
     let yMax = ui.wrist.canvas.height
-    
+
     //get data
     let vacuumOn = NetworkTables.getValue('' + addresses.arm.wrist.vacuum)
     let hatch = NetworkTables.getValue('' + addresses.arm.wrist.hatch)
@@ -198,7 +198,7 @@ function renderWrist(){
     let r = 50
 
     ct.strokeStyle = 'sliver'
-    
+
     if(vacuumOn){
 
         let grd = ct.createLinearGradient(0, 0, xMax, 0);
@@ -251,7 +251,7 @@ function renderRobot(){
 
     ct.beginPath();
     ct.arc(xMax/2,xMax/2, xMax/2, 0, 2 * Math.PI);
-    ct.fill(); 
+    ct.fill();
 
     let x = xMax/2
     let y = yMax/2
@@ -296,7 +296,7 @@ function renderView(){
     // 3/4 : 4/3
     let scale = 4.0/3.0
     let centerX = NetworkTables.getValue('' + addresses.vision.centerX)
-    
+
     let centerY = NetworkTables.getValue('' + addresses.vision.centerY)
 
     let heightA = NetworkTables.getValue('' + addresses.vision.height)
@@ -305,7 +305,7 @@ function renderView(){
     let scaleFactor = undefined
     ct.fillStyle = 'black'
     ct.fillRect(0,0,xMax,yMax)
-    
+
 
     ct.fillStyle = 'green'
     let i = -1
@@ -324,14 +324,14 @@ function renderView(){
         if(height < width){
             let a = height//assume hight is always bigger
             height = width
-            width = a 
+            width = a
         }
         let ver = rectange()
         ver.a = {x:+w,y:+h}
         ver.b = {x:+w,y:-h}
         ver.c = {x:-w,y:-h}
         ver.d = {x:-w,y:+h}
-        
+
         renderRotatedRectangle(ct,ver,angle,x,y)
         let TEST = false
         if(TEST){
@@ -345,7 +345,7 @@ function renderView(){
         if(scaleFactor == undefined || newScale > scaleFactor){
             scaleFactor = newScale
         }
-        
+
     }
     /*
 a:(485.57822994427727,160.08644417561493)
@@ -367,21 +367,32 @@ a:(289.58235652499064,52.10770029961328)
 b:(258.66910629571714,43.399739517058215)
 c:(234.67167179532186,128.59060292304298)
 d:(265.58492202459536,137.29856370559804)
+
+a:(426.17131161969564,344.45034505153467)
+b:(399.7654606211288,338.3540739963644)
+c:(383.83903383928873,407.3390073654575)
+d:(410.2448848378556,413.4352784206278)
+
+a:(581.1985834529676,405.0665521768541)
+b:(562.0310804489405,333.53245711159616)
+c:(535.2611028263293,340.70545099697404)
+d:(554.4286058303563,412.23954606223197)
+
     */
-//    console.log("scale:" + scaleFactor)
-    scale/=2.0//offset so cords are correfct
-    let a2 = {x:473/scale,y:138/scale}
-    let b2 = {x:455/scale,y:50/scale}
-    let c2 = {x:422/scale,y:56/scale}
-    let d2 = {x:440/scale,y:145/scale}
+   console.log("scale:" + scaleFactor + "\nscaleValue:" + scale)
+    scale = 1//offset so cords are correfct
+    let a2 = {x:426/scale,y:344/scale}
+    let b2 = {x:399/scale,y:338/scale}
+    let c2 = {x:383/scale,y:407/scale}
+    let d2 = {x:410/scale,y:413/scale}
 
     // let a1 = {x:178/scale,y:104/scale}
-    let a1 = {x:289/scale,y:52/scale}
+    let a1 = {x:581/scale,y:405/scale}
     // let b1 = {x:116/scale,y:86/scale}
-    let b1 = {x:258/scale,y:43/scale}
-    let c1 = {x:234/scale,y:128/scale}
-    let d1 = {x:265/scale,y:137/scale}
-    scale*=2.0
+    let b1 = {x:562/scale,y:333/scale}
+    let c1 = {x:535/scale,y:349/scale}
+    let d1 = {x:554/scale,y:412/scale}
+    scale/=0.6
     let c = {x:d1.x,y:d1.y}
 
     let scaleFactorX = scaleFactor;
@@ -394,7 +405,7 @@ d:(265.58492202459536,137.29856370559804)
     ct.lineTo(c1.x,c1.y)
     ct.lineTo(d1.x,d1.y)
     ct.lineTo(a1.x,a1.y)
-    
+
     ct.moveTo(a2.x,a2.y)
     ct.lineTo(b2.x,b2.y)
     ct.lineTo(c2.x,c2.y)
@@ -402,6 +413,7 @@ d:(265.58492202459536,137.29856370559804)
     ct.lineTo(a2.x,a2.y)
 
     ct.stroke()
+    return
     scaleFactor = scaleFactorX
 
     let arr = [a1,b1,c1,d1,a2,b2,c2,d2]
@@ -435,7 +447,7 @@ d:(265.58492202459536,137.29856370559804)
     ct.lineTo(c1.x,c1.y)
     ct.lineTo(d1.x,d1.y)
     ct.lineTo(a1.x,a1.y)
-    
+
     ct.moveTo(a2.x,a2.y)
     ct.lineTo(b2.x,b2.y)
     ct.lineTo(c2.x,c2.y)
@@ -468,7 +480,7 @@ function renderTimer(){
     ct.fillStyle = (isRed)? 'red' : 'blue'
     ct.beginPath();
     ct.arc(max/2,max/2, max/2, 0, 2 * Math.PI);
-    ct.fill(); 
+    ct.fill();
     let amountToFill = time / 180.0//3 minutes
     let archToFill = amountToFill * (2 * Math.PI)//amountToFill should be 0 <= x <= 1 so this should fall under 0 <= x <= (2*PI)
     ct.fillStyle = (isRed) ? 'DarkRed' : 'DarkBlue'
@@ -476,13 +488,13 @@ function renderTimer(){
     ct.moveTo(max/2,max/2)
     ct.arc(max/2,max/2, max/2, 0, archToFill);
     ct.moveTo(max/2,max/2)
-    ct.fill(); 
+    ct.fill();
 
     //do the text
     ct.font = "75px Monospace";
     ct.fillStyle = 'white'
-    ct.textAlign = "center"; 
-    
+    ct.textAlign = "center";
+
     let text = '' + Math.floor(time/60) + ':' + Math.floor(time%60)
     ct.fillText(text, max/2, max/2+20);//30px text, 15px ajustment?
 
@@ -507,11 +519,11 @@ function renderArm(){
     let pot = 2.47777
 	let mainArmRotation = NetworkTables.getValue('' + addresses.arm.mainArm.rotation)
     mainArmRotation = -1 *(((mainArmRotation / pot) % 360) - 90 + 25)
-    console.log("arm:" + mainArmRotation)
+    // console.log("arm:" + mainArmRotation)
     let wristArmRotation = NetworkTables.getValue('' + addresses.arm.wrist.rotation)
     let wristpot = 1
     wristArmRotation = ((wristArmRotation / wristpot)%360) + 0//keep it below 360
-    console.log("wrist:" + wristArmRotation)
+    // console.log("wrist:" + wristArmRotation)
     // let wrist = NetworkTables.getValue(addresses.arm.wrist.rotation)
 	//consts
     let yMax = ui.arm.canvas.height
@@ -526,7 +538,7 @@ function renderArm(){
     // ct.fillStyle = "#bbb";
     // ct.fillStyle = 'black'//transparent
     ct.fillRect(0, 0, ui.arm.canvas.width, ui.arm.canvas.height);
-    
+
     ct.fillStyle = '#bbb'
 
 	ct.fillRect(0, 0, ui.arm.canvas.width, ui.arm.canvas.height);
@@ -541,9 +553,9 @@ function renderArm(){
     let wristX = Math.cos(wristArmRotation * (Math.PI / 180))*wristLength + newX
     let wristY = Math.sin(wristArmRotation * (Math.PI / 180))*wristLength + newY
     ct.lineTo(wristX,wristY)
-    //draw to 
+    //draw to
     ct.stroke()
-    
+
 }
 
 function rectange(){
