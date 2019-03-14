@@ -379,7 +379,7 @@ c:(535.2611028263293,340.70545099697404)
 d:(554.4286058303563,412.23954606223197)
 
     */
-   console.log("scale:" + scaleFactor + "\nscaleValue:" + scale)
+   // console.log("scale:" + scaleFactor + "\nscaleValue:" + scale)
     scale = 1//offset so cords are correfct
     let a2 = {x:426/scale,y:344/scale}
     let b2 = {x:399/scale,y:338/scale}
@@ -414,9 +414,10 @@ d:(554.4286058303563,412.23954606223197)
 
     ct.stroke()
     return
+    console.log("RIP")
     scaleFactor = scaleFactorX
 
-    let arr = [a1,b1,c1,d1,a2,b2,c2,d2]
+    // let arr = [a1,b1,c1,d1,a2,b2,c2,d2]
 
     // console.log(arr)
     // for(ar in arr){
@@ -502,7 +503,7 @@ function renderTimer(){
         ('' + NetworkTables.getValue('' + addresses.robot.isField) == 'true') ? "Field Oriented" : "Robot Oriented"
     )
 
-    console.log(NetworkTables.getValue('' + addresses.robot.isField))
+    // console.log(NetworkTables.getValue('' + addresses.robot.isField))
 }
 
 function renderArm(){
