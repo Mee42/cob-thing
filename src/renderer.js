@@ -395,6 +395,12 @@ d:(554.4286058303563,412.23954606223197)
     scale/=0.6
     let c = {x:d1.x,y:d1.y}
 
+
+    let arr = [a1,b1,c1,d1,a2,b2,c2,d2]
+    for (let i = 0; i < arr.length; i++) {
+        arr[i].x = arr[i].x - 50;
+    }
+
     let scaleFactorX = scaleFactor;
 
     scaleFactor = 1
