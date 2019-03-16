@@ -334,7 +334,7 @@ function renderView(){
         ver.d = {x:-w,y:+h}
 
         renderRotatedRectangle(ct,ver,angle,x,y)
-        let TEST = false
+        let TEST = true
         if(TEST){
             console.log("a:(" + ver.a.x +"," + ver.a.y + ")" +
             "b:(" + ver.b.x +"," + ver.b.y + ")" +
@@ -379,28 +379,39 @@ b:(562.0310804489405,333.53245711159616)
 c:(535.2611028263293,340.70545099697404)
 d:(554.4286058303563,412.23954606223197)
 
+//real
+a:(570.7436155545697,377.9952045411933)
+b:(547.6036799589007,291.6357892142848)
+c:(514.8781800997272,300.40456047345515)
+d:(538.0181156953962,386.76397580036365)
+
+a:(376.3814728104277,301.54072314284525)
+b:(344.06260018814055,294.6711347012005)
+c:(325.4925506270723,382.03634900070944)
+d:(357.81142324935945,388.9059374423542)
+
     */
    // console.log("scale:" + scaleFactor + "\nscaleValue:" + scale)
     scale = 1//offset so cords are correfct
-    let a2 = {x:426/scale,y:344/scale}
-    let b2 = {x:399/scale,y:338/scale}
-    let c2 = {x:383/scale,y:407/scale}
-    let d2 = {x:410/scale,y:413/scale}
+    let a2 = {x:570/scale,y:377/scale}
+    let b2 = {x:547/scale,y:291/scale}
+    let c2 = {x:514/scale,y:300/scale}
+    let d2 = {x:538/scale,y:386/scale}
 
     // let a1 = {x:178/scale,y:104/scale}
-    let a1 = {x:581/scale,y:405/scale}
+    let a1 = {x:376/scale,y:301/scale}
     // let b1 = {x:116/scale,y:86/scale}
-    let b1 = {x:562/scale,y:333/scale}
-    let c1 = {x:535/scale,y:349/scale}
-    let d1 = {x:554/scale,y:412/scale}
+    let b1 = {x:344/scale,y:294/scale}
+    let c1 = {x:325/scale,y:382/scale}
+    let d1 = {x:357/scale,y:388/scale}
     scale/=0.6
     let c = {x:d1.x,y:d1.y}
 
 
     let arr = [a1,b1,c1,d1,a2,b2,c2,d2]
-    for (let i = 0; i < arr.length; i++) {
-        arr[i].x = arr[i].x - 50;
-    }
+    // for (let i = 0; i < arr.length; i++) {
+    //     arr[i].x = arr[i].x - 50;
+    // }
 
     let scaleFactorX = scaleFactor;
 
