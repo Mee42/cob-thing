@@ -605,58 +605,61 @@ function renderRotatedRectangle(ct,ver,rot,x,y){
 }
 
 
+function addNetworkTables(){
 
-NetworkTables.addKeyListener('' + addresses.arm.mainArm.rotation,()=>{
-    renderArm()
-},false);
-NetworkTables.addKeyListener('' + addresses.arm.wrist.wrist,()=>{
-	renderArm()
-},false);
-NetworkTables.addKeyListener('' + addresses.arm.wrist.rotation,()=>{
-    renderArm()
-},false)
-NetworkTables.addKeyListener('' + addresses.fms.timeLeft,()=>{
-    renderTimer();
-},false)
+  NetworkTables.addKeyListener('' + addresses.arm.mainArm.rotation,()=>{
+      renderArm()
+  },false);
+  NetworkTables.addKeyListener('' + addresses.arm.wrist.wrist,()=>{
+  	renderArm()
+  },false);
+  NetworkTables.addKeyListener('' + addresses.arm.wrist.rotation,()=>{
+      renderArm()
+  },false)
+  NetworkTables.addKeyListener('' + addresses.fms.timeLeft,()=>{
+      renderTimer();
+  },false)
 
-NetworkTables.addKeyListener('' + addresses.robot.isField,()=>{
-    renderTimer();
-},false)
-NetworkTables.addKeyListener('' + addresses.vision.centerX,()=>{
-    renderView();
-},false)
+  NetworkTables.addKeyListener('' + addresses.robot.isField,()=>{
+      renderTimer();
+  },false)
+  NetworkTables.addKeyListener('' + addresses.vision.centerX,()=>{
+      renderView();
+  },false)
 
-NetworkTables.addKeyListener('' + addresses.vision.centerY,()=>{
-    renderView();
-},false)
+  NetworkTables.addKeyListener('' + addresses.vision.centerY,()=>{
+      renderView();
+  },false)
 
-NetworkTables.addKeyListener('' + addresses.vision.height,()=>{
-    renderView();
-},false)
+  NetworkTables.addKeyListener('' + addresses.vision.height,()=>{
+      renderView();
+  },false)
 
-NetworkTables.addKeyListener('' + addresses.vision.angle,()=>{
-    renderView();
-},false)
+  NetworkTables.addKeyListener('' + addresses.vision.angle,()=>{
+      renderView();
+  },false)
 
-NetworkTables.addKeyListener('' + addresses.vision.width,()=>{
-    renderView();
-},false)
+  NetworkTables.addKeyListener('' + addresses.vision.width,()=>{
+      renderView();
+  },false)
 
-NetworkTables.addKeyListener('' + addresses.location.rotation,()=>{
-    renderRobot();
-})
+  NetworkTables.addKeyListener('' + addresses.location.rotation,()=>{
+      renderRobot();
+  })
 
-NetworkTables.addKeyListener('' + addresses.arm.wrist.vacuum, ()=> {
-    renderWrist();
-})
+  NetworkTables.addKeyListener('' + addresses.arm.wrist.vacuum, ()=> {
+      renderWrist();
+  })
 
-NetworkTables.addKeyListener('' + addresses.arm.wrist.hatch, ()=> {
-    renderWrist();
-})
-NetworkTables.addKeyListener('' + addresses.ak.isPressed, ()=> {
-    renderWrist();
-})
+  NetworkTables.addKeyListener('' + addresses.arm.wrist.hatch, ()=> {
+      renderWrist();
+  })
+  NetworkTables.addKeyListener('' + addresses.ak.isPressed, ()=> {
+      renderWrist();
+  })
 
+}
+addNetworkTables();
 
 
 //dev input
