@@ -136,7 +136,7 @@ function onRobotConnection(connected) {
         // login.style.display = "block"
 
 		// Add Enter key handler
-		console.log("called onRObotConnection:" + state)
+		console.log("robot connection changed:" + state)
 		address.onkeydown = ev => {
 			if (ev.key === 'Enter') {
 				connect.click();
@@ -179,7 +179,7 @@ function fullRender(){
 }
 
 function renderWrist(){
-    console.log("rendering wrist")
+    // console.log("rendering wrist")
     if(!NetworkTables.isRobotConnected()){
         //if not connected, we can't render this - just to be safe
         return
@@ -204,11 +204,11 @@ function renderWrist(){
 
         let grd = ct.createLinearGradient(0, 0, xMax, 0);
         let ak = NetworkTables.getValue('' + addresses.ak.isPressed)
-        console.log(ak)
+        // console.log(ak)
         ak = (('' + ak) == 'true') ? true : false
-        console.log(ak)
+        // console.log(ak)
         let color =  ak ? 'red' : 'blue'
-        console.log(color)
+        // console.log(color)
         grd.addColorStop(1, color);
         grd.addColorStop(0, "white");
 
