@@ -111,8 +111,8 @@ ipc.on('update', (ev, mesg) => {
 app.on('ready', createWindow)
 
 
-var child = require("child_process");
-child.exec("\"C:\\\\Program Files\\VideoLAN\\VLC\\vlc.exe\" --network-caching=0 rtsp://admin:frc623frc@ds-2cd2423g0-iw20180425aawrc15020658.local/ISAPI/Streaming/channels/102 --sout-x264-tune=zerolatency --postproc-q=0 --sout-x264-crf=0");
+//var child = require("child_process");
+//child.exec("\"C:\\\\Program Files\\VideoLAN\\VLC\\vlc.exe\" --network-caching=0 rtsp://admin:frc623frc@ds-2cd2423g0-iw20180425aawrc15020658.local/ISAPI/Streaming/channels/102 --sout-x264-tune=zerolatency --postproc-q=0 --sout-x264-crf=0");
 
 
 app.on('window-all-closed', function () {
