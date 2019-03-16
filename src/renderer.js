@@ -147,9 +147,10 @@ function onRobotConnection(connected) {
 		// connect.disabled = false;
 		connect.firstChild.data = 'Connect';
 		// CHANGE THIS VALUE TO YOUR ROBOT'S IP ADDRESS
-		address.value = 'roborio-62X-frc.local';
+	// address.value = 'roborio-62X-frc.local';
+     address.value = '10.6.2X.2'
 		address.focus();
-        address.setSelectionRange(10,11);
+        address.setSelectionRange(6,7);
 
 		// On click try to connect and disable the input and the button
 		connect.onclick = () => {
