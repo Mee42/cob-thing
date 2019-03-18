@@ -234,7 +234,7 @@ function renderWrist(){
 }
 
 function renderRobot(){
-
+    console.log("rendering robot")
     if(!NetworkTables.isRobotConnected()){
         //if not connected, we can't render this - just to be safe
         return
@@ -275,6 +275,9 @@ function renderRobot(){
     ver.c = {x:-w,y:h1}
     ver.d = {x:+w,y:h1}
     renderRotatedRectangle(ct,ver,angle,x,y)
+
+    ct.font = '48px serif';
+    ct.fillText(Math.floor(NetworkTables.getValue('' + addresses.location.rotation)), xMax/2,yMax/2 );
     // console.log(a.x + "," + a.y + ":" + b.x + "," + b.y + ":" +c.x + "," + c.y + ":" + d.x + "," + d.y + ":")
     // renderArm()
 }
@@ -334,7 +337,7 @@ function renderView(){
         ver.d = {x:-w,y:+h}
 
         renderRotatedRectangle(ct,ver,angle,x,y)
-        let TEST = true
+        let TEST = false
         if(TEST){
             console.log("a:(" + ver.a.x +"," + ver.a.y + ")" +
             "b:(" + ver.b.x +"," + ver.b.y + ")" +
@@ -431,6 +434,17 @@ d:(357.81142324935945,388.9059374423542)
     ct.lineTo(a2.x,a2.y)
 
     ct.stroke()
+
+
+
+    ct.strokeStyle = 'yellow'
+    ct.beginPath()
+    ct.moveTo(a1.x,yMax)
+    ct.lineTo(a1.x,0)
+    ct.stroke()
+
+
+
     return
     console.log("RIP")
     scaleFactor = scaleFactorX
