@@ -4,8 +4,8 @@ start DriverStation.exe
 
 cd "C:\Users\frc623\COB-2019"
 
-git checkout carson
+#git checkout carson
 
-git pull
+#git pull
 
 npm start 
