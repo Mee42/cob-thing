@@ -277,7 +277,7 @@ function renderRobot(){
     renderRotatedRectangle(ct,ver,angle,x,y)
 
     ct.font = '48px serif';
-    ct.fillText(Math.floor(NetworkTables.getValue('' + addresses.location.rotation)), xMax/2,yMax/2 );
+    ct.fillText(Math.floor(NetworkTables.getValue('' + addresses.location.rotation)), xMax/2 + 50,yMax/2 + 50);
     // console.log(a.x + "," + a.y + ":" + b.x + "," + b.y + ":" +c.x + "," + c.y + ":" + d.x + "," + d.y + ":")
     // renderArm()
 }
