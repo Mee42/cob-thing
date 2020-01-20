@@ -11,13 +11,14 @@ let addresses = {
         timeLeft: "/cob/fms/time-left",
         isRed: "/FMSInfo/IsRedAlliance",
     },
+    mode: "cob/mode", //0 = Field Orient, 1 = Robot Orient, 2 = Auto, 3 = Vision, 4 = Disabled
 }
 
 function initAllDatapoints(){
-    NetworkTables.putValue(addresses.location.rotation,0)
-   
-    NetworkTables.putValue(addresses.fms.timeLeft,180)
-    NetworkTables.putValue(addresses.fms.isRed,false)
+    NetworkTables.putValue(addresses.location.rotation, 0);
+    NetworkTables.putValue(addresses.fms.timeLeft, 180);
+    NetworkTables.putValue(addresses.fms.isRed, false);
+    NetworkTables.putValue(addresses.mode, 4);
 }
 
 let ui = {
@@ -27,7 +28,7 @@ let ui = {
         canvas : document.getElementById('timer'),
     },
     robot: {
-        canvas : document.getElementById('robot')
+        image : document.getElementById('robot')
     },
 	connecter: {
 		address: document.getElementById('connect-address'),
@@ -112,47 +113,10 @@ function renderRobot(){
         //if not connected, we can't render this - just to be safe
         return
     }
-    if(ui.robot.canvas == null){
-        console.log("unable to render robot due to content undefined")
-        return
-    }
-    let ct = ui.robot.canvas.getContext("2d")
-    let xMax = ui.robot.canvas.width
-    let yMax = ui.robot.canvas.height
+
     let angle = NetworkTables.getValue('' + addresses.location.rotation)
-    angle = (angle + 360 + 180) % 360
-    ct.fillStyle = 'white'
-
-    ct.beginPath();
-    ct.arc(xMax/2,xMax/2, xMax/2, 0, 2 * Math.PI);
-    ct.fill();
-
-    let x = xMax/2
-    let y = yMax/2
-    let r = 90
-    ct.fillStyle = 'silver'
-    let ver = rectange()
-    ver.a = {x:r,y:r}
-    ver.b = {x:r,y:-r}
-    ver.c = {x:-r,y:-r}
-    ver.d = {x:-r,y:r}
-    renderRotatedRectangle(ct,ver,angle,x,y)
-
-    ct.fillStyle = 'black'
-    let w = 10
-    let h1 = r+10
-    let h2 = 10
-    ver = rectange()
-    ver.a = {x:+w,y:h2}
-    ver.b = {x:-w,y:h2}
-    ver.c = {x:-w,y:h1}
-    ver.d = {x:+w,y:h1}
-    renderRotatedRectangle(ct,ver,angle,x,y)
-
-    ct.font = '48px serif';
-    ct.fillText(Math.floor(NetworkTables.getValue('' + addresses.location.rotation)), xMax/2 + 50,yMax/2 + 50);
-    // console.log(a.x + "," + a.y + ":" + b.x + "," + b.y + ":" +c.x + "," + c.y + ":" + d.x + "," + d.y + ":")
-    // renderArm()
+    angle = (angle + 360) % 360
+    ui.robot.image.style.transform = "rotate("+ angle +"deg)"
 }
 
 function renderTimer(){
@@ -167,6 +131,8 @@ function renderTimer(){
     }
     // console.log("called renderTimer()")
     let time = NetworkTables.getValue('' + addresses.fms.timeLeft)
+    console.log(time);
+    time = Math.floor(time);
     let isRed = NetworkTables.getValue('' + addresses.fms.isRed)
     if(isRed == 'true'){
         isRed = true;
@@ -174,14 +140,23 @@ function renderTimer(){
     let ct = ui.timer.canvas.getContext("2d")
     let max = ui.timer.canvas.width
     ct.fillStyle = 'rgba(0,0,0,0)'//transparency
+    let isFlashing = time <= 45 && time % 2 === 1 && NetworkTables.getValue("" + addresses.mode) <= 1;
     ct.fillRect(0, 0, max, max);
-    ct.fillStyle = (isRed)? 'red' : 'blue'
+    if (isFlashing){ 
+        ct.fillStyle = '#F4D03F';
+    }else{
+        ct.fillStyle = (isRed)? 'red': 'blue';
+    }
     ct.beginPath();
     ct.arc(max/2,max/2, max/2, 0, 2 * Math.PI);
     ct.fill();
     let amountToFill = time / 180.0//3 minutes
     let archToFill = amountToFill * (2 * Math.PI)//amountToFill should be 0 <= x <= 1 so this should fall under 0 <= x <= (2*PI)
-    ct.fillStyle = (isRed) ? 'DarkRed' : 'DarkBlue'
+    if (isFlashing){ 
+        ct.fillStyle = '#D4AC0D';
+    }else{
+        ct.fillStyle = (isRed)? 'darkRed': 'darkBlue';
+    }
     ct.beginPath();
     ct.moveTo(max/2,max/2)
     ct.arc(max/2,max/2, max/2, 0, archToFill);

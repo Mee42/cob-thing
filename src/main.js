@@ -34,7 +34,7 @@ let clientDataListener = (key, val, valType, mesgType, id, flags) => {
 
 function createWindow () {
   // Create the browser window.
-
+  
   win = new BrowserWindow({
      width: 1539,
     height: 631,
