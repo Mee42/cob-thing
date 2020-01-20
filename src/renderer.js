@@ -26,14 +26,15 @@ let ui = {
     timeleft: document.getElementById('timeleft'),
     timer: {
         canvas : document.getElementById('timer'),
+        mode : document.getElementById("robot-mode"),
     },
     robot: {
-        image : document.getElementById('robot')
+        image : document.getElementById('robot'),
     },
 	connecter: {
 		address: document.getElementById('connect-address'),
         connect: document.getElementById('connect'),
-        login: document.getElementById('login')
+        login: document.getElementById('login'),
 	}
 };
 
@@ -120,10 +121,23 @@ function renderRobot(){
 }
 
 function renderTimer(){
-
+    
     if(!NetworkTables.isRobotConnected()){
         //if not connected, we can't render this - just to be safe
         return
+    }
+    //Mode Identifier
+    let mode = NetworkTables.getValue("" + addresses.mode);
+    if (mode === 0){
+        ui.timer.mode.innerText = "Field Oriented";
+    }else if (mode === 1){
+        ui.timer.mode.innerText = "Robot Oriented";
+    }else if (mode === 2){
+        ui.timer.mode.innerText = "Auto";
+    }else if (mode === 3){
+        ui.timer.mode.innerText = "Vision";
+    }else if (mode === 4){
+        ui.timer.mode.innerText = "Disabled";
     }
     if(ui.timer.canvas == null){
         console.log("unable to render timer due to contnt undefined")
@@ -225,6 +239,9 @@ function addNetworkTables(){
     NetworkTables.addKeyListener('' + addresses.fms.isRed,()=>{
     renderTimer();
     })
+    NetworkTables.addKeyListener('' + addresses.mode,()=>{
+        renderTimer();
+        })
 }
 addNetworkTables();
 fullRender()
